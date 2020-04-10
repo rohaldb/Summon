@@ -12,16 +12,18 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
+    override func viewDidAppear() {
+        let appDelegate = NSApp.delegate as! AppDelegate
+        appDelegate.settingsWindow = self.view.window
+    }
+    
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
         }
     }
-
-
+    
 }
 

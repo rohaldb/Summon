@@ -28,12 +28,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     let statusBarItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+    var settingsWindow: NSWindow!
 
-    
-    @objc func launchSettings() {
-        print(NSApp.mainWindow)
-        print(NSApp.windows[2].isVisible)
-        NSApp.windows[2].makeKeyAndOrderFront(self)
+    @objc func openSettingsWindow() {
+        settingsWindow.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -45,15 +43,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
     
-
     
     func addApplicationToStatusBar() {
         statusBarItem.button?.title = "👮🏽‍♀️"
         
-        
         let menu = NSMenu()
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Preferences", action: #selector(launchSettings), keyEquivalent: ","))
+        menu.addItem(NSMenuItem(title: "Preferences", action: #selector(openSettingsWindow), keyEquivalent: ","))
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusBarItem.menu = menu
     }
