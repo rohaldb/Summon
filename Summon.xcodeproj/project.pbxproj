@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,7 @@
 		434540712440353500CB3818 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4345406F2440353500CB3818 /* Main.storyboard */; };
 		4345407D2440353500CB3818 /* SummonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4345407C2440353500CB3818 /* SummonTests.swift */; };
 		434540882440353500CB3818 /* SummonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434540872440353500CB3818 /* SummonUITests.swift */; };
+		434540972440357500CB3818 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 434540962440357500CB3818 /* HotKey */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				434540972440357500CB3818 /* HotKey in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +142,9 @@
 			dependencies = (
 			);
 			name = Summon;
+			packageProductDependencies = (
+				434540962440357500CB3818 /* HotKey */,
+			);
 			productName = Summon;
 			productReference = 434540662440353400CB3818 /* Summon.app */;
 			productType = "com.apple.product-type.application";
@@ -212,6 +217,9 @@
 				Base,
 			);
 			mainGroup = 4345405D2440353400CB3818;
+			packageReferences = (
+				434540952440357500CB3818 /* XCRemoteSwiftPackageReference "HotKey" */,
+			);
 			productRefGroup = 434540672440353400CB3818 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -571,6 +579,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		434540952440357500CB3818 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		434540962440357500CB3818 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 434540952440357500CB3818 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4345405E2440353400CB3818 /* Project object */;
 }
