@@ -26,11 +26,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    
+    let statusBarItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
 
+    
+    @objc func launchSettings() {
+        print(NSApp.mainWindow)
+        print(NSApp.windows[2].isVisible)
+        NSApp.windows[2].makeKeyAndOrderFront(self)
+        NSApp.activate(ignoringOtherApps: true)
+    }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
-//        hotKey = HotKey(keyCombo: KeyCombo(key: .c, modifiers: [.command, .option]))
         addApplicationToStatusBar()
     }
 
@@ -38,7 +45,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
     
-    let statusBarItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
 
     
     func addApplicationToStatusBar() {
@@ -50,26 +56,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "Preferences", action: #selector(launchSettings), keyEquivalent: ","))
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusBarItem.menu = menu
-
-//
-//        let statusBarMenu = NSMenu()
-//        statusBarItem.menu = statusBarMenu
-//
-//        statusBarMenu.addItem(
-//            withTitle: "Summon Chrome",
-//            action: #selector(AppDelegate.summonChrome),
-//            keyEquivalent: "")
-    }
-    
-    var myWindow: NSWindow? = nil
-
-    @objc func launchSettings() {
-        let storyboard = NSStoryboard(name: "Main",bundle: nil)
-        let controller: ViewController = storyboard.instantiateController(withIdentifier: "ViewControllerID") as! ViewController
-        myWindow = NSWindow(contentViewController: controller)
-        myWindow?.makeKeyAndOrderFront(self)
-        let vc = NSWindowController(window: myWindow)
-        vc.showWindow(self)
     }
 
     @objc func summonChrome() {
