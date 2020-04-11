@@ -15,8 +15,6 @@ class ViewController: NSViewController {
     }
 
     override func viewDidAppear() {
-        let appDelegate = NSApp.delegate as! AppDelegate
-        appDelegate.settingsWindow = self.view.window
     }
     
     override var representedObject: Any? {

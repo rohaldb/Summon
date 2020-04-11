@@ -22,12 +22,4 @@ class SummonUITests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testStatusBarButtonIsInstantiated() {
-        let app = XCUIApplication()
-        app.launch()
-        
-        let statusBarElement = app.statusItems.element(matching: NSPredicate(format: "title = 'SummonButton'"))
-        XCTAssert(statusBarElement.exists)
-    }
 }

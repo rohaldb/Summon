@@ -11,32 +11,24 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    let statusBarItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
-    var settingsWindow: NSWindow!
-
-    @objc func openSettingsWindow() {
-        settingsWindow.makeKeyAndOrderFront(self)
-        NSApp.activate(ignoringOtherApps: true)
-    }
+    var statusItem: NSStatusItem?
+    @IBOutlet weak var menu: NSMenu?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        addApplicationToStatusBar()
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let itemImage = NSImage(named: "rank")
+        itemImage?.isTemplate = true
+        statusItem?.button?.image = itemImage
+
+        if let menu = menu {
+            statusItem?.menu = menu
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
     
-    
-    func addApplicationToStatusBar() {
-        statusBarItem.button?.title = "👮🏽‍♀️"
-        
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Preferences", action: #selector(openSettingsWindow), keyEquivalent: ","))
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-        statusBarItem.menu = menu
-    }
 
     @objc func summonChrome() {
         print("Summoning Chrome")
