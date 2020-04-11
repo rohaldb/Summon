@@ -7,25 +7,9 @@
 //
 
 import Cocoa
-import HotKey
-
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    private var hotKey: HotKey? {
-        didSet {
-            guard let hotKey = hotKey else {
-                print("unrecognised")
-                return
-            }
-
-            hotKey.keyDownHandler = {
-                print("Hotkey detected")
-                self.summonChrome()
-            }
-        }
-    }
     
     let statusBarItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
     var settingsWindow: NSWindow!
