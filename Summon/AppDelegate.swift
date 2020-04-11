@@ -11,24 +11,38 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    var statusItem: NSStatusItem?
+    var settingsWindow: NSWindow?
+    var statusBarItem: NSStatusItem?
     @IBOutlet weak var menu: NSMenu?
-
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        let itemImage = NSImage(named: "rank")
-        itemImage?.isTemplate = true
-        statusItem?.button?.image = itemImage
-
-        if let menu = menu {
-            statusItem?.menu = menu
-        }
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+        setUpStatusBar()
     }
     
+    func setUpStatusBar() {
+        statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let itemImage = NSImage(named: "rank")
+        itemImage?.isTemplate = true
+        statusBarItem?.button?.image = itemImage
+
+        if let menu = menu {
+            statusBarItem?.menu = menu
+        }
+    }
+    
+    @IBAction func showPreferences(_ sender: Any) {
+        if settingsWindow == nil {
+            instantiateSettingsWindow()
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        settingsWindow!.makeKeyAndOrderFront(nil)
+    }
+    
+    func instantiateSettingsWindow() {
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateController(withIdentifier: .init(stringLiteral: "preferencesID")) as? ViewController else { return }
+        settingsWindow = NSWindow(contentViewController: vc)
+    }
 
     @objc func summonChrome() {
         print("Summoning Chrome")

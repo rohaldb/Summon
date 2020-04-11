@@ -14,6 +14,9 @@
 		4345407D2440353500CB3818 /* SummonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4345407C2440353500CB3818 /* SummonTests.swift */; };
 		434540882440353500CB3818 /* SummonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434540872440353500CB3818 /* SummonUITests.swift */; };
 		434540972440357500CB3818 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 434540962440357500CB3818 /* HotKey */; };
+		4355BBA12441B2970000817C /* LoadableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4355BBA02441B2970000817C /* LoadableView.swift */; };
+		4355BBA32441B2AD0000817C /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4355BBA22441B2AD0000817C /* PreferencesView.swift */; };
+		4355BBA52441B2B90000817C /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4355BBA42441B2B90000817C /* View.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,9 @@
 		434540832440353500CB3818 /* SummonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SummonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		434540872440353500CB3818 /* SummonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonUITests.swift; sourceTree = "<group>"; };
 		434540892440353500CB3818 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4355BBA02441B2970000817C /* LoadableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableView.swift; sourceTree = "<group>"; };
+		4355BBA22441B2AD0000817C /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		4355BBA42441B2B90000817C /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +104,7 @@
 		434540682440353400CB3818 /* Summon */ = {
 			isa = PBXGroup;
 			children = (
+				4355BB9F2441B2790000817C /* Custom Views */,
 				434540692440353400CB3818 /* AppDelegate.swift */,
 				4345406B2440353400CB3818 /* ViewController.swift */,
 				4345406D2440353500CB3818 /* Assets.xcassets */,
@@ -124,6 +131,16 @@
 				434540892440353500CB3818 /* Info.plist */,
 			);
 			path = SummonUITests;
+			sourceTree = "<group>";
+		};
+		4355BB9F2441B2790000817C /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				4355BBA02441B2970000817C /* LoadableView.swift */,
+				4355BBA22441B2AD0000817C /* PreferencesView.swift */,
+				4355BBA42441B2B90000817C /* View.xib */,
+			);
+			path = "Custom Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4345406E2440353500CB3818 /* Assets.xcassets in Resources */,
+				4355BBA52441B2B90000817C /* View.xib in Resources */,
 				434540712440353500CB3818 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +280,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4355BBA12441B2970000817C /* LoadableView.swift in Sources */,
+				4355BBA32441B2AD0000817C /* PreferencesView.swift in Sources */,
 				4345406C2440353400CB3818 /* ViewController.swift in Sources */,
 				4345406A2440353400CB3818 /* AppDelegate.swift in Sources */,
 			);
