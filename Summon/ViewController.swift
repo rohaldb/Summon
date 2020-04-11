@@ -20,8 +20,6 @@ class ViewController: NSViewController {
         view.window?.styleMask.remove(.resizable)
         view.window?.styleMask.remove(.miniaturizable)
         view.window?.center()
-        let preferencesView = PreferencesView(frame: self.view.bounds)
-        preferencesView.add(toView: self.view)
     }
     
     override var representedObject: Any? {
