@@ -60,17 +60,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a7l-71-Ttp">
-                                <rect key="frame" x="183" y="196" width="28" height="16"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gFe-Yd-5kK">
+                                <rect key="frame" x="187" y="127" width="107" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Hey" id="Del-zw-1ie">
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="This is some text" placeholderString="This is some text" id="I9L-eu-zrx">
                                     <font key="font" usesAppearanceFont="YES"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <binding destination="du7-WJ-vf5" name="displayPatternValue1" keyPath="self.modifiers" id="tEi-8J-bXj">
+                                        <dictionary key="options">
+                                            <string key="NSDisplayPattern">%{value1}@</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
                             </textField>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="modifiers" destination="gFe-Yd-5kK" id="0aH-7O-DJo"/>
+                    </connections>
                 </viewController>
                 <customObject id="3nP-sU-TyO" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setUpHotKeys()
         setUpStatusBar()
+        summonChrome()
     }
     
     func setUpHotKeys() {
@@ -52,13 +53,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func summonChrome() {
         print("Summoning Chrome")
-        let runningApps = NSWorkspace.shared.runningApplications
-        let chrome = runningApps.first{$0.localizedName == "Google Chrome"}
-        if let runningChrome = chrome {
-            runningChrome.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
-        } else {
-            print("Chrome is not open")
-        }
     }
 }
 
