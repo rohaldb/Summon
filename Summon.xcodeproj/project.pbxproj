@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		430E38BC2442BA9500F8F8C9 /* HotKeysController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430E38BB2442BA9500F8F8C9 /* HotKeysController.swift */; };
 		4345406A2440353400CB3818 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434540692440353400CB3818 /* AppDelegate.swift */; };
 		4345406C2440353400CB3818 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4345406B2440353400CB3818 /* ViewController.swift */; };
 		4345406E2440353500CB3818 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4345406D2440353500CB3818 /* Assets.xcassets */; };
@@ -14,7 +15,6 @@
 		4345407D2440353500CB3818 /* SummonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4345407C2440353500CB3818 /* SummonTests.swift */; };
 		434540882440353500CB3818 /* SummonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434540872440353500CB3818 /* SummonUITests.swift */; };
 		434540972440357500CB3818 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 434540962440357500CB3818 /* HotKey */; };
-		4355BBAB2442AF2F0000817C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4355BBAA2442AF2F0000817C /* File.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		430E38BB2442BA9500F8F8C9 /* HotKeysController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeysController.swift; sourceTree = "<group>"; };
 		434540662440353400CB3818 /* Summon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Summon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		434540692440353400CB3818 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4345406B2440353400CB3818 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -48,7 +49,6 @@
 		434540832440353500CB3818 /* SummonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SummonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		434540872440353500CB3818 /* SummonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonUITests.swift; sourceTree = "<group>"; };
 		434540892440353500CB3818 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4355BBAA2442AF2F0000817C /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,12 +101,12 @@
 			isa = PBXGroup;
 			children = (
 				434540692440353400CB3818 /* AppDelegate.swift */,
-				4355BBAA2442AF2F0000817C /* File.swift */,
 				4345406B2440353400CB3818 /* ViewController.swift */,
 				4345406D2440353500CB3818 /* Assets.xcassets */,
 				4345406F2440353500CB3818 /* Main.storyboard */,
 				434540722440353500CB3818 /* Info.plist */,
 				434540732440353500CB3818 /* Summon.entitlements */,
+				430E38BB2442BA9500F8F8C9 /* HotKeysController.swift */,
 			);
 			path = Summon;
 			sourceTree = "<group>";
@@ -265,8 +265,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				430E38BC2442BA9500F8F8C9 /* HotKeysController.swift in Sources */,
 				4345406C2440353400CB3818 /* ViewController.swift in Sources */,
-				4355BBAB2442AF2F0000817C /* File.swift in Sources */,
 				4345406A2440353400CB3818 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
