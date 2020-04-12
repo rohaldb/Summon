@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func setUpHotKeys() {
         hotKeysController = HotKeysController()
-        hotKeysController?.setUp()
+        menu?.delegate = hotKeysController
     }
     
     func setUpStatusBar() {

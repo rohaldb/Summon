@@ -7,6 +7,7 @@
 //
 import HotKey
 import Foundation
+import AppKit
 
 class HotKeysController: NSObject {
 
@@ -21,10 +22,15 @@ class HotKeysController: NSObject {
     ]
     
     private var hotkeys = [HotKey]()
+    private var listeningForHotKeys = true
     
     private func getHandler(key: Key, command: Command) -> (() -> Void) {
         return { [weak self] in
 
+            guard let self = self else { return }
+
+            if !self.listeningForHotKeys { return }
+            
             print("hotkey: \(key.description), command: \(command)")
 
             switch command {
@@ -38,7 +44,12 @@ class HotKeysController: NSObject {
         }
     }
     
-    func setUp() {
+    override init() {
+        super.init()
+        configureHotKeysFromConfig()
+    }
+    
+    func configureHotKeysFromConfig() {
         print("Hotkeys enabled")
         self.configuration.forEach { command, key in
             let hotkey = HotKey(key: key, modifiers: [.command, .control])
@@ -46,5 +57,24 @@ class HotKeysController: NSObject {
             self.hotkeys.append(hotkey)
         }
     }
+    
+    func enableHotKeys() {
+        listeningForHotKeys = true
+    }
+    
+    func disableHotKeys() {
+        listeningForHotKeys = false
+    }
 
+}
+
+// work around https://github.com/soffes/HotKey/issues/17
+extension HotKeysController: NSMenuDelegate {
+    func menuWillOpen(_ menu: NSMenu) {
+        enableHotKeys()
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        disableHotKeys()
+    }
 }
