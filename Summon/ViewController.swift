@@ -14,6 +14,7 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
             return $0
@@ -26,12 +27,23 @@ class ViewController: NSViewController {
 
     override func keyDown(with event: NSEvent) {
         //THIS METHOD SHOULD MARK THE CONCLUSION OF THE KEYBINDING UPDATE
-        print("modifier flags: ", event.modifierFlags)
-        print("chars w/o mods: ", (event.charactersIgnoringModifiers))
+
+        let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        
+        if modifierFlags.isEmpty {
+            print("modifier flags are empty, doing nothing")
+        } else {
+            //ADD THE EVENT TO HOTKEYS
+            print("modifier flags: ", modifierFlags)
+            print("chars w/o mods: ", event.charactersIgnoringModifiers)
+        }
+        
     }
     
     override func flagsChanged(with event: NSEvent) {
         // THIS METHOD SHOULD UPDATE THE VIEW ONLY.
+        let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        modifiers.stringValue = buildStringFromModifierKeys(modifiers: modifierFlags)
     }
     
     func buildStringFromModifierKeys(modifiers: NSEvent.ModifierFlags) -> String {
@@ -59,12 +71,6 @@ class ViewController: NSViewController {
         view.window?.styleMask.remove(.resizable)
         view.window?.styleMask.remove(.miniaturizable)
         view.window?.center()
-    }
-    
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
     }
     
 }
