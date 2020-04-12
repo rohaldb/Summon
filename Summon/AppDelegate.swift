@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import HotKey
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -15,8 +16,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem?
     @IBOutlet weak var menu: NSMenu?
     
+    private enum Command : String {
+        case First,
+             Second
+    }
+    
+    private var configuration = [
+        Command.First:  Key.f,
+        Command.Second:  Key.s,
+    ]
+    private var hotkeys = [HotKey]()
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        configureMultipleHotKeys()
         setUpStatusBar()
+    }
+    
+    private func getHandler(key: Key, command: Command) -> (() -> Void) {
+        return { [weak self] in
+
+            NSLog("hotkey: \(key.description), command: \(command)")
+
+            switch command {
+                case Command.First:
+                    print("first triggered")
+                    break
+                case Command.Second:
+                    print("second triggered")
+                    break
+            }
+        }
+    }
+    
+    func configureMultipleHotKeys () {
+        self.configuration.forEach { command, key in
+            let hotkey = HotKey(key: key, modifiers: [.command, .control])
+            hotkey.keyDownHandler = self.getHandler(key: key, command: command)
+            self.hotkeys.append(hotkey)
+        }
     }
     
     func setUpStatusBar() {
