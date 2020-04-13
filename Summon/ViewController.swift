@@ -18,8 +18,9 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        applicationSearcher = ApplicationSearcher(callback: self.applicationHandler)
-        applicationSearcher.getAllApplications()
+        applicationSearcher = ApplicationSearcher()
+        let _ = applicationSearcher.getAllApplications()
+        
         
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
