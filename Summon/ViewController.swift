@@ -35,10 +35,8 @@ class ViewController: NSViewController {
         if modifierFlags.isEmpty {
             print("modifier flags are empty, doing nothing")
         } else {
-            appDelegate.hotKeysController?.addHotkey(key: Key.f, modifiers: [.command, .control], applicationName: "Google Chrome")
-            //ADD THE EVENT TO HOTKEYS
-            print("modifier flags: ", modifierFlags)
-            print("chars w/o mods: ", event.charactersIgnoringModifiers)
+            let keyCombo = KeyCombo(carbonKeyCode: UInt32(event.keyCode), carbonModifiers: modifierFlags.carbonFlags)
+            appDelegate.hotKeysController?.addHotkey(keyCombo: keyCombo, applicationName: "Google Chrome")
         }
         
     }

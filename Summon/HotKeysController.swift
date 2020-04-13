@@ -17,19 +17,18 @@ class HotKeysController: NSObject {
         super.init()
     }
     
-    public func addHotkey(key: Key, modifiers: NSEvent.ModifierFlags, applicationName: String) {
-        let hotkey = HotKey(key: key, modifiers: [.command, .control])
-        hotkey.keyDownHandler = self.getHandler(key: key, applicationName: applicationName)
+    public func addHotkey(keyCombo: KeyCombo, applicationName: String) {
+        print("Adding hotkey: \(keyCombo) -> \(applicationName)")
+        let hotkey = HotKey(keyCombo: keyCombo)
+        hotkey.keyDownHandler = self.getHandler(applicationName: applicationName)
         self.hotkeys.append(hotkey)
     }
     
-    private func getHandler(key: Key, applicationName: String) -> (() -> Void) {
+    private func getHandler(applicationName: String) -> (() -> Void) {
         return { [weak self] in
 
             guard self != nil else { return }
             
-            print("hotkey: \(key.description), command: \(applicationName)")
-
             let runningApps = NSWorkspace.shared.runningApplications
             let chrome = runningApps.first{$0.localizedName == applicationName}
             if let runningChrome = chrome {
