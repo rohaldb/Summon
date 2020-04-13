@@ -6,15 +6,20 @@
 //  Copyright © 2020 Benjamin Rohald. All rights reserved.
 //
 
+
 import Cocoa
 
 class ViewController: NSViewController {
 
     @IBOutlet weak var modifiers: NSTextField!
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    var applicationSearcher: ApplicationSearcher!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        applicationSearcher = ApplicationSearcher(callback: self.applicationHandler)
+        applicationSearcher.getAllApplications()
         
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
@@ -23,6 +28,13 @@ class ViewController: NSViewController {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
             self.keyDown(with: $0)
             return $0
+        }
+        
+    }
+    
+    private func applicationHandler(results: [NSMetadataItem]) {
+        for item in results {
+            print(item.value(forAttribute: kMDItemDisplayName as String))
         }
     }
 
