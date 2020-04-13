@@ -7,10 +7,12 @@
 //
 
 import Cocoa
+import HotKey
 
 class ViewController: NSViewController {
 
     @IBOutlet weak var modifiers: NSTextField!
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,7 @@ class ViewController: NSViewController {
         if modifierFlags.isEmpty {
             print("modifier flags are empty, doing nothing")
         } else {
+            appDelegate.hotKeysController?.addHotkey(key: Key.f, modifiers: [.command, .control], applicationName: "Google Chrome")
             //ADD THE EVENT TO HOTKEYS
             print("modifier flags: ", modifierFlags)
             print("chars w/o mods: ", event.charactersIgnoringModifiers)

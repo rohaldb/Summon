@@ -18,7 +18,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setUpHotKeys()
         setUpStatusBar()
-        summonChrome()
     }
     
     func setUpHotKeys() {
@@ -50,9 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let vc = storyboard.instantiateController(withIdentifier: .init(stringLiteral: "preferencesID")) as? ViewController else { return }
         settingsWindow = NSWindow(contentViewController: vc)
     }
-
-    @objc func summonChrome() {
-        print("Summoning Chrome")
-    }
+    
 }
 

@@ -10,48 +10,33 @@ import Foundation
 import AppKit
 
 class HotKeysController: NSObject {
-
-    private enum Command : String {
-        case First,
-             Second
-    }
-    
-    private var configuration = [
-        Command.First:  Key.f,
-        Command.Second:  Key.s,
-    ]
     
     private var hotkeys = [HotKey]()
     
-    private func getHandler(key: Key, command: Command) -> (() -> Void) {
+    override init() {
+        super.init()
+    }
+    
+    public func addHotkey(key: Key, modifiers: NSEvent.ModifierFlags, applicationName: String) {
+        let hotkey = HotKey(key: key, modifiers: [.command, .control])
+        hotkey.keyDownHandler = self.getHandler(key: key, applicationName: applicationName)
+        self.hotkeys.append(hotkey)
+    }
+    
+    private func getHandler(key: Key, applicationName: String) -> (() -> Void) {
         return { [weak self] in
 
             guard self != nil else { return }
             
-            print("hotkey: \(key.description), command: \(command)")
+            print("hotkey: \(key.description), command: \(applicationName)")
 
-            switch command {
-                case Command.First:
-                    print("first triggered")
-                    break
-                case Command.Second:
-                    print("second triggered")
-                    break
+            let runningApps = NSWorkspace.shared.runningApplications
+            let chrome = runningApps.first{$0.localizedName == applicationName}
+            if let runningChrome = chrome {
+                runningChrome.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
+            } else {
+                print(applicationName, " is not open")
             }
-        }
-    }
-    
-    override init() {
-        super.init()
-        configureHotKeysFromConfig()
-    }
-    
-    func configureHotKeysFromConfig() {
-        print("Hotkeys enabled")
-        self.configuration.forEach { command, key in
-            let hotkey = HotKey(key: key, modifiers: [.command, .control])
-            hotkey.keyDownHandler = self.getHandler(key: key, command: command)
-            self.hotkeys.append(hotkey)
         }
     }
     
