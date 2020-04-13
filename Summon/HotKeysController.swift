@@ -22,14 +22,11 @@ class HotKeysController: NSObject {
     ]
     
     private var hotkeys = [HotKey]()
-    private var listeningForHotKeys = true
     
     private func getHandler(key: Key, command: Command) -> (() -> Void) {
         return { [weak self] in
 
-            guard let self = self else { return }
-
-            if !self.listeningForHotKeys { return }
+            guard self != nil else { return }
             
             print("hotkey: \(key.description), command: \(command)")
 
@@ -59,11 +56,11 @@ class HotKeysController: NSObject {
     }
     
     func enableHotKeys() {
-        listeningForHotKeys = true
+        //need to add all hotkeys
     }
     
     func disableHotKeys() {
-        listeningForHotKeys = false
+        //need to add all hotkeys
     }
 
 }
@@ -71,10 +68,10 @@ class HotKeysController: NSObject {
 // work around https://github.com/soffes/HotKey/issues/17
 extension HotKeysController: NSMenuDelegate {
     func menuWillOpen(_ menu: NSMenu) {
-        enableHotKeys()
+        disableHotKeys()
     }
 
     func menuDidClose(_ menu: NSMenu) {
-        disableHotKeys()
+        enableHotKeys()
     }
 }
