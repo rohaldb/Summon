@@ -7,7 +7,6 @@
 //
 
 import Cocoa
-import HotKey
 
 class ViewController: NSViewController {
 
@@ -35,8 +34,7 @@ class ViewController: NSViewController {
         if modifierFlags.isEmpty {
             print("modifier flags are empty, doing nothing")
         } else {
-            let keyCombo = KeyCombo(carbonKeyCode: UInt32(event.keyCode), carbonModifiers: modifierFlags.carbonFlags)
-            appDelegate.hotKeysController?.addHotkey(keyCombo: keyCombo, applicationName: "Google Chrome")
+            appDelegate.hotKeysController?.addHotKey(event: event, applicationName: "Google Chrome")
         }
         
     }

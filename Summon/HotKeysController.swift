@@ -10,18 +10,21 @@ import Foundation
 import AppKit
 
 class HotKeysController: NSObject {
-    
-    private var hotkeys = [HotKey]()
+
+    private var hotKeys = [String:HotKey]()
     
     override init() {
         super.init()
     }
     
-    public func addHotkey(keyCombo: KeyCombo, applicationName: String) {
-        print("Adding hotkey: \(keyCombo) -> \(applicationName)")
+    public func addHotKey(event: NSEvent, applicationName: String) {
+        let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        let keyCombo = KeyCombo(carbonKeyCode: UInt32(event.keyCode), carbonModifiers: modifierFlags.carbonFlags)
         let hotkey = HotKey(keyCombo: keyCombo)
         hotkey.keyDownHandler = self.getHandler(applicationName: applicationName)
-        self.hotkeys.append(hotkey)
+        self.hotKeys[applicationName] = hotkey
+        
+        print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
     
     private func getHandler(applicationName: String) -> (() -> Void) {
