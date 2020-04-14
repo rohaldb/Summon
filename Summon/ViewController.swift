@@ -11,16 +11,14 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    @IBOutlet weak var modifiers: NSTextField!
+    @IBOutlet weak var applicationNameTextField: NSTextFieldCell!
+    @IBOutlet weak var modifiersButton: NSButtonCell!
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     var applicationSearcher: ApplicationSearcher!
+    var listeningForHotkey = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        applicationSearcher = ApplicationSearcher()
-        let _ = applicationSearcher.getAllApplications()
-        
         
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
@@ -32,33 +30,42 @@ class ViewController: NSViewController {
         }
         
     }
-    
-    private func applicationHandler(results: [NSMetadataItem]) {
-        for item in results {
-            print(item.value(forAttribute: kMDItemDisplayName as String))
-        }
-    }
 
+    @IBAction func modifiersButtonClicked(_ sender: Any) {
+        if !listeningForHotkey { modifiersButton.title = "" }
+        listeningForHotkey = true
+    }
+    
     override func keyDown(with event: NSEvent) {
         //THIS METHOD SHOULD MARK THE CONCLUSION OF THE KEYBINDING UPDATE
-
+        if !listeningForHotkey { return }
+        
         let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         
         if modifierFlags.isEmpty {
             print("modifier flags are empty, doing nothing")
         } else {
-            appDelegate.hotKeysController?.addHotKey(event: event, applicationName: "Google Chrome")
+            appDelegate.hotKeysController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
+            modifiersButton.title = modifiersButton.title + event.charactersIgnoringModifiers!
         }
         
+        listeningForHotkey = false
+        print("listening for keys \(listeningForHotkey)")
+    }
+    
+    @IBAction func deleteButtonPressed(_ sender: Any) {
+        appDelegate.hotKeysController?.removeHotKey(applicationName: applicationNameTextField.stringValue)
     }
     
     override func flagsChanged(with event: NSEvent) {
-        // THIS METHOD SHOULD UPDATE THE VIEW ONLY.
-        let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        modifiers.stringValue = buildStringFromModifierKeys(modifiers: modifierFlags)
+        if !listeningForHotkey { return }
+        
+        setButtonTitle(event: event)
     }
     
-    func buildStringFromModifierKeys(modifiers: NSEvent.ModifierFlags) -> String {
+    func setButtonTitle(event: NSEvent) {
+        
+        let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         var stringBuilder = ""
             
         if modifiers.contains(.control) {
@@ -74,7 +81,11 @@ class ViewController: NSViewController {
            stringBuilder += "⇧"
         }
         
-        return stringBuilder
+        if stringBuilder == "" {
+            modifiersButton.title = modifiersButton.alternateTitle
+        } else {
+            modifiersButton.title = stringBuilder
+        }
     }
     
     override func viewDidAppear() {

@@ -27,6 +27,11 @@ class HotKeysController: NSObject {
         print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
     
+    public func removeHotKey(applicationName: String) {
+        hotKeys[applicationName] = nil
+        hotKeys.removeValue(forKey: applicationName)
+    }
+    
     private func getHandler(applicationName: String) -> (() -> Void) {
         return { [weak self] in
 
