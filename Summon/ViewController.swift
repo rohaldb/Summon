@@ -14,11 +14,14 @@ class ViewController: NSViewController {
     @IBOutlet weak var applicationNameTextField: NSTextFieldCell!
     @IBOutlet weak var modifiersButton: NSButtonCell!
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
-    var listeningForHotkey = false
+    var listeningForHotKey = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        hotKeyController = appDelegate.hotKeysController
         
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
@@ -32,33 +35,33 @@ class ViewController: NSViewController {
     }
 
     @IBAction func modifiersButtonClicked(_ sender: Any) {
-        if !listeningForHotkey { modifiersButton.title = "" }
-        listeningForHotkey = true
+        if !listeningForHotKey { modifiersButton.title = "" }
+        listeningForHotKey = true
     }
     
     override func keyDown(with event: NSEvent) {
         //THIS METHOD SHOULD MARK THE CONCLUSION OF THE KEYBINDING UPDATE
-        if !listeningForHotkey { return }
+        if !listeningForHotKey { return }
         
         let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         
         if modifierFlags.isEmpty {
             print("modifier flags are empty, doing nothing")
         } else {
-            appDelegate.hotKeysController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
+            hotKeyController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
             modifiersButton.title = modifiersButton.title + event.charactersIgnoringModifiers!
         }
         
-        listeningForHotkey = false
-        print("listening for keys \(listeningForHotkey)")
+        listeningForHotKey = false
+        print("listening for keys \(listeningForHotKey)")
     }
     
     @IBAction func deleteButtonPressed(_ sender: Any) {
-        appDelegate.hotKeysController?.removeHotKey(applicationName: applicationNameTextField.stringValue)
+        hotKeyController?.removeHotKey(applicationName: applicationNameTextField.stringValue)
     }
     
     override func flagsChanged(with event: NSEvent) {
-        if !listeningForHotkey { return }
+        if !listeningForHotKey { return }
         
         setButtonTitle(event: event)
     }
