@@ -142,9 +142,8 @@ extension ViewController: NSTableViewDelegate {
 
     // 2
     if tableColumn == tableView.tableColumns[0] {
-        let pathToIcon = item.value(forAttribute: NSMetadataItemPathKey as String)
-        image = NSWorkspace.shared.icon(forFile: pathToIcon as! String)
-        text = item.value(forAttribute: kMDItemDisplayName as String) as! String
+        image = item.icon
+        text = item.name
         cellIdentifier = CellIdentifiers.NameCell
     }
 
