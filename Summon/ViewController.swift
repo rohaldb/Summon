@@ -130,27 +130,27 @@ extension ViewController: NSTableViewDelegate {
         
         let item = applicationMetaData[row]
         
-        if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "applicationColID") {
-
+        switch tableColumn?.identifier {
+        case NSUserInterfaceItemIdentifier(rawValue: "applicationColID"):
             let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "applicationRowID")
             guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
             cellView.textField?.stringValue = item.name
             cellView.imageView?.image = item.icon
             return cellView
-
-        } else if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "hotKeyColID") {
+        
+        case NSUserInterfaceItemIdentifier(rawValue: "hotKeyColID"):
             let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "hotKeyRowID")
             guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
             
             return cellView
-        } else if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "deleteColID") {
+        case NSUserInterfaceItemIdentifier(rawValue: "deleteColID"):
             let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "deleteRowID")
             guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
     
             return cellView
-       }
-        
-        return nil
+        default:
+            return nil
+        }
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
