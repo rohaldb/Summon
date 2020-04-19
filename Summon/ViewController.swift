@@ -133,20 +133,12 @@ extension ViewController: NSTableViewDelegate {
         switch tableColumn?.identifier {
         case NSUserInterfaceItemIdentifier(rawValue: "applicationColID"):
             let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "applicationRowID")
-            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
-            cellView.textField?.stringValue = item.name
-            cellView.imageView?.image = item.icon
-            return cellView
-        
-        case NSUserInterfaceItemIdentifier(rawValue: "hotKeyColID"):
-            let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "hotKeyRowID")
-            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
+            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? ApplicationCellView else { return nil }
             
-            return cellView
-        case NSUserInterfaceItemIdentifier(rawValue: "deleteColID"):
-            let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "deleteRowID")
-            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
-    
+            cellView.nameField.stringValue = item.name
+            cellView.icon.image = item.icon
+            cellView.hotKeyField.stringValue = "hey ben"
+            
             return cellView
         default:
             return nil

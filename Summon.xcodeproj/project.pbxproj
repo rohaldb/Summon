@@ -16,6 +16,7 @@
 		4345407D2440353500CB3818 /* SummonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4345407C2440353500CB3818 /* SummonTests.swift */; };
 		434540882440353500CB3818 /* SummonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434540872440353500CB3818 /* SummonUITests.swift */; };
 		434540972440357500CB3818 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 434540962440357500CB3818 /* HotKey */; };
+		435EB3BE244C411500074CD7 /* ApplicationCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435EB3BD244C411500074CD7 /* ApplicationCellView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		434540832440353500CB3818 /* SummonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SummonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		434540872440353500CB3818 /* SummonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonUITests.swift; sourceTree = "<group>"; };
 		434540892440353500CB3818 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		435EB3BD244C411500074CD7 /* ApplicationCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCellView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				434540732440353500CB3818 /* Summon.entitlements */,
 				430E38BB2442BA9500F8F8C9 /* HotKeysController.swift */,
 				430E38C1244478E500F8F8C9 /* ApplicationSearcher.swift */,
+				435EB3BD244C411500074CD7 /* ApplicationCellView.swift */,
 			);
 			path = Summon;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				430E38C2244478E500F8F8C9 /* ApplicationSearcher.swift in Sources */,
 				4345406C2440353400CB3818 /* ViewController.swift in Sources */,
 				4345406A2440353400CB3818 /* AppDelegate.swift in Sources */,
+				435EB3BE244C411500074CD7 /* ApplicationCellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
