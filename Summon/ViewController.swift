@@ -18,11 +18,12 @@ class ViewController: NSViewController {
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
     var listeningForHotKey = false
-    var applicationMetaData = ApplicationSearcher().getAllApplications()
+    var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        hotKeyController = appDelegate.hotKeysController
         configureTableView()
         conifigureKeyEvents()
         
@@ -31,9 +32,7 @@ class ViewController: NSViewController {
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = 50
-        
-        hotKeyController = appDelegate.hotKeysController
+        tableView.selectionHighlightStyle = .none
     }
     
     func conifigureKeyEvents() {
@@ -119,43 +118,43 @@ class ViewController: NSViewController {
 
 extension ViewController: NSTableViewDataSource {
   
-  func numberOfRows(in tableView: NSTableView) -> Int {
-    return applicationMetaData.count
-  }
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return applicationMetaData.count
+    }
 
 }
 
 extension ViewController: NSTableViewDelegate {
-
-  fileprivate enum CellIdentifiers {
-    static let NameCell = "applicationNameCellID"
-  }
-
-  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-
-    var image: NSImage?
-    var text: String = ""
-    var cellIdentifier: String = ""
     
-    // 1
-    let item = applicationMetaData[row]
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
+        
+        let item = applicationMetaData[row]
+        
+        if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "applicationColID") {
 
-    // 2
-    if tableColumn == tableView.tableColumns[0] {
-        image = item.icon
-        text = item.name
-        cellIdentifier = CellIdentifiers.NameCell
+            let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "applicationRowID")
+            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
+            cellView.textField?.stringValue = item.name
+            cellView.imageView?.image = item.icon
+            return cellView
+
+        } else if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "hotKeyColID") {
+            let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "hotKeyRowID")
+            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
+            
+            return cellView
+        } else if tableColumn?.identifier == NSUserInterfaceItemIdentifier(rawValue: "deleteColID") {
+            let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "deleteRowID")
+            guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSTableCellView else { return nil }
+    
+            return cellView
+       }
+        
+        return nil
     }
-
-    // 3
-    if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
-        cell.textField?.stringValue = text
-        cell.imageView?.image = image ?? nil
-        return cell
+    
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        return 50.0
     }
-    
-    
-    return nil
-  }
 
 }
