@@ -11,18 +11,32 @@ import Cocoa
 
 class ViewController: NSViewController {
 
+    @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var applicationNameTextField: NSTextFieldCell!
     @IBOutlet weak var modifiersButton: NSButtonCell!
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
     var listeningForHotKey = false
+    var applicationMetaData = ApplicationSearcher().getAllApplications()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        hotKeyController = appDelegate.hotKeysController
+        configureTableView()
+        conifigureKeyEvents()
         
+    }
+    
+    func configureTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = 50
+        
+        hotKeyController = appDelegate.hotKeysController
+    }
+    
+    func conifigureKeyEvents() {
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
             self.flagsChanged(with: $0)
             return $0
@@ -101,3 +115,48 @@ class ViewController: NSViewController {
     
 }
 
+
+
+extension ViewController: NSTableViewDataSource {
+  
+  func numberOfRows(in tableView: NSTableView) -> Int {
+    return applicationMetaData.count
+  }
+
+}
+
+extension ViewController: NSTableViewDelegate {
+
+  fileprivate enum CellIdentifiers {
+    static let NameCell = "applicationNameCellID"
+  }
+
+  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+
+    var image: NSImage?
+    var text: String = ""
+    var cellIdentifier: String = ""
+    
+    // 1
+    let item = applicationMetaData[row]
+
+    // 2
+    if tableColumn == tableView.tableColumns[0] {
+        let pathToIcon = item.value(forAttribute: NSMetadataItemPathKey as String)
+        image = NSWorkspace.shared.icon(forFile: pathToIcon as! String)
+        text = item.value(forAttribute: kMDItemDisplayName as String) as! String
+        cellIdentifier = CellIdentifiers.NameCell
+    }
+
+    // 3
+    if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
+        cell.textField?.stringValue = text
+        cell.imageView?.image = image ?? nil
+        return cell
+    }
+    
+    
+    return nil
+  }
+
+}

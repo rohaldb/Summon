@@ -26,7 +26,6 @@ class ApplicationSearcher: NSObject {
         var applications = [NSMetadataItem]()
     
         for url in urls {
-            print(url.path, fileManager.isExecutableFile(atPath: url.path))
             if fileManager.isExecutableFile(atPath: url.path) {
                 guard let mdi = NSMetadataItem(url: url) else { continue }
                 applications.append(mdi)
