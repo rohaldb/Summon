@@ -9,6 +9,12 @@
 
 import Cocoa
 
+var FakeApplicationBindings = [
+    "Google Chrome": true,
+    "iTerm2": false,
+    "SourceTree": false,
+]
+
 class ViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
@@ -77,7 +83,10 @@ class ViewController: NSViewController {
     }
     
     func setHotKeysLabel() {
-        
+        hotKeysLabel.stringValue = buildStringFromKeyCombination()
+    }
+    
+    func buildStringFromKeyCombination() -> String {
         let modifiers = keyCombination.modifiers.intersection(.deviceIndependentFlagsMask)
         var stringBuilder = ""
             
@@ -95,9 +104,8 @@ class ViewController: NSViewController {
         }
         
         stringBuilder += keyCombination.chars
-        //TODO: IGNORE CAPSLOCK AND OTHER THINGS
         
-        hotKeysLabel.stringValue = stringBuilder
+        return stringBuilder
     }
     
     override func viewDidAppear() {
@@ -137,6 +145,16 @@ extension ViewController: NSTableViewDelegate {
             cellView.bindButton.action =  #selector(self.bindApplicationToHotKey)
             cellView.deleteButton.tag = row
             cellView.deleteButton.action =  #selector(self.deleteBinding)
+            
+            cellView.deleteButton.isHidden = true
+            
+            if FakeApplicationBindings[item.name] == true {
+                cellView.bindButton.title = "Bound!"
+                cellView.deleteButton.isHidden = false
+            } else {
+                cellView.bindButton.isHidden = true
+            }
+                
             
             return cellView
         default:
