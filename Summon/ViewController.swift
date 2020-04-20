@@ -13,16 +13,19 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var applicationNameTextField: NSTextFieldCell!
+    
+    @IBOutlet weak var hotKeysLabel: NSTextField!
     @IBOutlet weak var modifiersButton: NSButtonCell!
+    var keyCombination = KeyCombination(modifiers: [], chars: "")
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
-    var listeningForHotKey = false
+    var listeningForHotKey = true
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         hotKeyController = appDelegate.hotKeysController
         configureTableView()
         conifigureKeyEvents()
@@ -46,27 +49,22 @@ class ViewController: NSViewController {
         }
         
     }
-
-    @IBAction func modifiersButtonClicked(_ sender: Any) {
-        if !listeningForHotKey { modifiersButton.title = "" }
-        listeningForHotKey = true
-    }
     
     override func keyDown(with event: NSEvent) {
-        //THIS METHOD SHOULD MARK THE CONCLUSION OF THE KEYBINDING UPDATE
-        if !listeningForHotKey { return }
         
-        let modifierFlags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        
-        if modifierFlags.isEmpty {
-            print("modifier flags are empty, doing nothing")
-        } else {
-            hotKeyController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
-            modifiersButton.title = modifiersButton.title + event.charactersIgnoringModifiers!
-        }
-        
-        listeningForHotKey = false
-        print("listening for keys \(listeningForHotKey)")
+        keyCombination.chars = event.charactersIgnoringModifiers ?? ""
+
+        setHotKeysLabel()
+//        if modifierFlags.isEmpty {
+//            print("modifier flags are empty, doing nothing")
+//            return
+//        } else {
+//            hotKeysLabel.stringValue += event.charactersIgnoringModifiers!
+////            hotKeyController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
+//        }
+//
+//        listeningForHotKey = false
+//        print("listening for keys \(listeningForHotKey)")
     }
     
     @IBAction func deleteButtonPressed(_ sender: Any) {
@@ -74,14 +72,13 @@ class ViewController: NSViewController {
     }
     
     override func flagsChanged(with event: NSEvent) {
-        if !listeningForHotKey { return }
-        
-        setButtonTitle(event: event)
+        keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        setHotKeysLabel()
     }
     
-    func setButtonTitle(event: NSEvent) {
+    func setHotKeysLabel() {
         
-        let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        let modifiers = keyCombination.modifiers.intersection(.deviceIndependentFlagsMask)
         var stringBuilder = ""
             
         if modifiers.contains(.control) {
@@ -97,11 +94,10 @@ class ViewController: NSViewController {
            stringBuilder += "⇧"
         }
         
-        if stringBuilder == "" {
-            modifiersButton.title = modifiersButton.alternateTitle
-        } else {
-            modifiersButton.title = stringBuilder
-        }
+        stringBuilder += keyCombination.chars
+        //TODO: IGNORE CAPSLOCK AND OTHER THINGS
+        
+        hotKeysLabel.stringValue = stringBuilder
     }
     
     override func viewDidAppear() {
@@ -149,4 +145,9 @@ extension ViewController: NSTableViewDelegate {
         return 50.0
     }
 
+}
+
+struct KeyCombination {
+    var modifiers: NSEvent.ModifierFlags
+    var chars: String
 }
