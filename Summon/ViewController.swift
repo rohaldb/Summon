@@ -133,12 +133,25 @@ extension ViewController: NSTableViewDelegate {
             
             cellView.nameField.stringValue = item.name
             cellView.icon.image = item.icon
-            cellView.hotKeyField.stringValue = "hey ben"
+            cellView.bindButton.tag = row
+            cellView.bindButton.action =  #selector(self.bindApplicationToHotKey)
+            cellView.deleteButton.tag = row
+            cellView.deleteButton.action =  #selector(self.deleteBinding)
             
             return cellView
         default:
             return nil
         }
+    }
+    
+    @objc func bindApplicationToHotKey(button:NSButton){
+        let row = button.tag
+        print("bind button clicked in row \(row)");
+    }
+    
+    @objc func deleteBinding(button:NSButton){
+        let row = button.tag
+        print("delete button clicked in row \(row)");
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
