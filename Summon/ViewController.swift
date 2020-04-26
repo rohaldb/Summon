@@ -14,6 +14,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var selectedApplicationIcon: NSImageView!
     @IBOutlet weak var hotKeysLabel: NSTextField!
+    @IBOutlet weak var descriptionLabel: NSTextField!
     
     var keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
@@ -28,6 +29,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        transitionToAwaitingApplicationSelect()
         filteredApplicationMetaData = applicationMetaData
         hotKeyController = appDelegate.hotKeysController
         configureTableView()
@@ -62,17 +64,8 @@ class ViewController: NSViewController {
             return
         }
         
-        keyCombination.char = event.charactersIgnoringModifiers ?? ""
-        keyCombination.keyCode = event.keyCode
-        setHotKeysLabel()
         
-        hotKeyController?.addHotKey(
-            keyCode: keyCombination.keyCode,
-            modifierFlags: keyCombination.modifiers,
-            applicationName: selectedApplication.name
-        )
-        
-        transitionToAwaitingApplicationSelect()
+        completeHotKeyBinding(event: event)
     }
     
     override func flagsChanged(with event: NSEvent) {
@@ -85,8 +78,18 @@ class ViewController: NSViewController {
         setHotKeysLabel()
     }
     
-    func assignColorToPartOfString(stringBuilder: NSMutableAttributedString, startIndex: Int, length: Int) {
-        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.purple, range: NSRange(location:startIndex, length: length))
+    func completeHotKeyBinding(event: NSEvent) {
+        keyCombination.char = event.charactersIgnoringModifiers ?? ""
+        keyCombination.keyCode = event.keyCode
+        setHotKeysLabel()
+        
+        hotKeyController?.addHotKey(
+            keyCode: keyCombination.keyCode,
+            modifierFlags: keyCombination.modifiers,
+            applicationName: selectedApplication.name
+        )
+        
+        transitionToAwaitingApplicationSelect()
     }
     
     func setHotKeysLabel() {
@@ -115,6 +118,10 @@ class ViewController: NSViewController {
 
         hotKeysLabel.attributedStringValue = stringBuilder
     }
+    
+    func assignColorToPartOfString(stringBuilder: NSMutableAttributedString, startIndex: Int, length: Int) {
+        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.purple, range: NSRange(location:startIndex, length: length))
+    }
 
     
     @IBAction func searchFieldChanged(_ sender: NSSearchField) {
@@ -132,6 +139,8 @@ class ViewController: NSViewController {
     func transitionToListeningForKeysMode() {
         mode = Mode.ListeningForKeys
         tableView.reloadData()
+        let selectedApplicationName = selectedApplication.name
+        descriptionLabel.stringValue = "Enter a Hot Key to bind to \(selectedApplicationName)"
     }
     
     func transitionToAwaitingApplicationSelect() {
@@ -139,12 +148,12 @@ class ViewController: NSViewController {
         setHotKeysLabel()
         mode = Mode.AwaitingApplicationSelect
         tableView.reloadData()
+        descriptionLabel.stringValue = "Select an Application from the table below"
     }
     
     override func viewDidAppear() {
         super.viewWillAppear()
 
-        setHotKeysLabel()
         view.window?.styleMask.remove(.resizable)
         view.window?.styleMask.remove(.miniaturizable)
         view.window?.center()
@@ -194,14 +203,14 @@ extension ViewController: NSTableViewDelegate {
     }
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        selectedApplication = applicationMetaData[tableView.selectedRow]
+        selectedApplication = filteredApplicationMetaData[tableView.selectedRow]
         selectedApplicationIcon.image = selectedApplication.icon
-        mode = Mode.ListeningForKeys
+        transitionToListeningForKeysMode()
     }
     
     @objc func deleteBinding(button:NSButton){
         let row = button.tag
-        let applicationName = applicationMetaData[row].name
+        let applicationName = filteredApplicationMetaData[row].name
         hotKeyController?.removeHotKey(applicationName: applicationName)
         tableView.reloadData()
         print("delete button clicked in row \(row)");

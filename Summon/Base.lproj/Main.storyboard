@@ -61,14 +61,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="52" horizontalPageScroll="10" verticalLineScroll="52" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8B-zv-ZNP">
-                                <rect key="frame" x="0.0" y="0.0" width="540" height="432"/>
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="392"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" ambiguous="YES" id="bwj-uV-oiS">
-                                    <rect key="frame" x="1" y="1" width="538" height="430"/>
+                                    <rect key="frame" x="1" y="1" width="538" height="390"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="50" rowSizeStyle="automatic" viewBased="YES" id="0Si-RV-7pA">
-                                            <rect key="frame" x="0.0" y="0.0" width="538" height="430"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="538" height="390"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -156,12 +156,12 @@
                                 </textFieldCell>
                             </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJH-FF-xOS">
-                                <rect key="frame" x="57" y="478" width="48" height="48"/>
+                                <rect key="frame" x="57" y="483" width="50" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="LwV-IW-IV7"/>
                             </imageView>
                             <searchField wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYw-FZ-rwZ">
-                                <rect key="frame" x="197" y="440" width="147" height="22"/>
+                                <rect key="frame" x="197" y="400" width="147" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search Apps" usesSingleLineMode="YES" bezelStyle="round" id="IZu-Kl-S2S">
                                     <font key="font" metaFont="system"/>
@@ -172,9 +172,19 @@
                                     <action selector="searchFieldChanged:" target="du7-WJ-vf5" id="gvA-jL-maR"/>
                                 </connections>
                             </searchField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HcA-ka-OxS">
+                                <rect key="frame" x="112" y="442" width="315" height="16"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Label" id="D8l-1s-mNQ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
+                        <outlet property="descriptionLabel" destination="HcA-ka-OxS" id="P7Y-5L-2Td"/>
                         <outlet property="hotKeysLabel" destination="ctP-NZ-fPT" id="M3K-nW-fys"/>
                         <outlet property="selectedApplicationIcon" destination="PJH-FF-xOS" id="lwV-iU-51u"/>
                         <outlet property="tableView" destination="0Si-RV-7pA" id="Qr0-jT-8z6"/>
