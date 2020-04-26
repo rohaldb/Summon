@@ -83,12 +83,23 @@ class ViewController: NSViewController {
         keyCombination.keyCode = event.keyCode
         setHotKeysLabel()
         
-        hotKeyController?.addHotKey(
-            char: keyCombination.char,
+        let existingApplicationWithHotKey = hotKeyController?.hotKeyAlreadyAssigned(
             keyCode: keyCombination.keyCode,
-            modifiers: keyCombination.modifiers,
-            applicationName: selectedApplication.name
+            modifiers: keyCombination.modifiers
         )
+        
+        if let existingApplicationWithHotKey = existingApplicationWithHotKey {
+            print(existingApplicationWithHotKey)
+        } else {
+            hotKeyController?.addHotKey(
+                char: keyCombination.char,
+                keyCode: keyCombination.keyCode,
+                modifiers: keyCombination.modifiers,
+                applicationName: selectedApplication.name
+            )
+        }
+        
+        
         
         transitionToAwaitingApplicationSelect()
     }

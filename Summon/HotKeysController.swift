@@ -33,6 +33,15 @@ class HotKeysController: NSObject {
         print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
     
+    public func hotKeyAlreadyAssigned(keyCode: UInt16, modifiers: NSEvent.ModifierFlags) -> String? {
+        for (applicationName, hotKeyMetaData) in hotKeys {
+            if hotKeyMetaData.keyCode == keyCode && hotKeyMetaData.modifiers == modifiers {
+                return applicationName
+            }
+        }
+        return nil
+    }
+    
     public func removeHotKey(applicationName: String) {
         hotKeys.removeValue(forKey: applicationName)
     }
