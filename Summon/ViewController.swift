@@ -96,9 +96,16 @@ class ViewController: NSViewController {
     func setHotKeysLabel() {
         
         let modifiers = keyCombination.modifiers.intersection(.deviceIndependentFlagsMask)
-        let string = "^⌥⌘⇧" + keyCombination.char
-        let stringBuilder = NSMutableAttributedString(string: string)
-        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.gray, range: NSRange(location: 0, length: 4))
+        let string = "^⌥⌘⇧" + (keyCombination.char == "" ? "_" : keyCombination.char)
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        let stringBuilder = NSMutableAttributedString(
+            string: string,
+            attributes: [.paragraphStyle: paragraph]
+        )
+        
+        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.gray, range: NSRange(location: 0, length: 5))
         
         if modifiers.contains(.control) {
             assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 0, length: 1)
@@ -113,7 +120,7 @@ class ViewController: NSViewController {
             assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 3, length: 1)
         }
         
-        if string.count == 5 {
+        if keyCombination.char != "" {
             assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 4, length: 1)
         }
 
@@ -121,7 +128,8 @@ class ViewController: NSViewController {
     }
     
     func assignColorToPartOfString(stringBuilder: NSMutableAttributedString, startIndex: Int, length: Int) {
-        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.purple, range: NSRange(location:startIndex, length: length))
+        let color = NSColor.init(red: 0.72, green: 0, blue: 1, alpha: 1)
+        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: NSRange(location:startIndex, length: length))
     }
 
     

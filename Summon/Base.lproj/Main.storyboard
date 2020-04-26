@@ -170,7 +170,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ctP-NZ-fPT">
                                 <rect key="frame" x="215" y="484" width="170" height="43"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" drawsBackground="YES" id="Qm5-7o-Zta">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" placeholderString="^⌥⌘⇧J" drawsBackground="YES" id="Qm5-7o-Zta">
                                     <font key="font" metaFont="system" size="33"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
