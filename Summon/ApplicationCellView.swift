@@ -14,7 +14,6 @@ class ApplicationCellView: NSTableCellView {
     @IBOutlet weak var icon: NSImageView!
     @IBOutlet weak var nameField: NSTextField!
     
-    @IBOutlet weak var bindButton: NSButton!
     @IBOutlet weak var deleteButton: NSButton!
     @IBOutlet weak var hotKeyLabel: NSTextField!
     

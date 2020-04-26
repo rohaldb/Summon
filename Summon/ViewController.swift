@@ -12,7 +12,7 @@ import Cocoa
 class ViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
-    
+    @IBOutlet weak var selectedApplicationIcon: NSImageView!
     @IBOutlet weak var hotKeysLabel: NSTextField!
     
     var keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
@@ -20,7 +20,8 @@ class ViewController: NSViewController {
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
-    var mode = Mode.DefaultMode
+    var mode = Mode.AwaitingApplicationSelect
+    var selectedApplication: Application!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,6 @@ class ViewController: NSViewController {
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.selectionHighlightStyle = .none
     }
     
     func conifigureKeyEvents() {
@@ -63,7 +63,13 @@ class ViewController: NSViewController {
         keyCombination.keyCode = event.keyCode
         setHotKeysLabel()
         
-        transitionToAwaitingBindingMode()
+        hotKeyController?.addHotKey(
+            keyCode: keyCombination.keyCode,
+            modifierFlags: keyCombination.modifiers,
+            applicationName: selectedApplication.name
+        )
+        
+        transitionToAwaitingApplicationSelect()
     }
     
     override func flagsChanged(with event: NSEvent) {
@@ -107,24 +113,15 @@ class ViewController: NSViewController {
         hotKeysLabel.attributedStringValue = stringBuilder
     }
     
-    @IBAction func addButtonPressed(_ sender: NSButton) {
-        transitionToListeningForKeysMode()
-    }
-    
-    func transitionToDefaultMode() {
-        keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
-        setHotKeysLabel()
-        mode = Mode.DefaultMode
-        tableView.reloadData()
-    }
-    
     func transitionToListeningForKeysMode() {
         mode = Mode.ListeningForKeys
         tableView.reloadData()
     }
     
-    func transitionToAwaitingBindingMode() {
-        mode = Mode.AwaitingBinding
+    func transitionToAwaitingApplicationSelect() {
+        keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
+        setHotKeysLabel()
+        mode = Mode.AwaitingApplicationSelect
         tableView.reloadData()
     }
     
@@ -162,19 +159,13 @@ extension ViewController: NSTableViewDelegate {
             cellView.nameField.stringValue = item.name
             cellView.icon.image = item.icon
             
-            cellView.bindButton.tag = row
-            cellView.bindButton.action =  #selector(self.bindApplicationToHotKey)
-            
             cellView.deleteButton.tag = row
             cellView.deleteButton.action =  #selector(self.deleteBinding)
-            
-            cellView.bindButton.isHidden = true
+        
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if mode == Mode.AwaitingBinding {
-                cellView.bindButton.isHidden = false
-            } else if let _ = hotKeyController?.hotKeys[item.name] {
+            if let _ = hotKeyController?.hotKeys[item.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
             }
@@ -186,19 +177,10 @@ extension ViewController: NSTableViewDelegate {
         }
     }
     
-    @objc func bindApplicationToHotKey(button:NSButton){
-        let row = button.tag
-        print("bind button clicked in row \(row)");
-        
-        let applicationName = applicationMetaData[row].name
-        
-        hotKeyController?.addHotKey(
-            keyCode: keyCombination.keyCode,
-            modifierFlags: keyCombination.modifiers,
-            applicationName: applicationName
-        )
-        
-        transitionToDefaultMode()
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        selectedApplication = applicationMetaData[tableView.selectedRow]
+        selectedApplicationIcon.image = selectedApplication.icon
+        mode = Mode.ListeningForKeys
     }
     
     @objc func deleteBinding(button:NSButton){
@@ -222,7 +204,6 @@ struct KeyCombination {
 }
 
 enum Mode {
-    case DefaultMode
     case ListeningForKeys
-    case AwaitingBinding
+    case AwaitingApplicationSelect
 }
