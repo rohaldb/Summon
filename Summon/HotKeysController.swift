@@ -77,7 +77,7 @@ class HotKeysController: NSObject {
             buildHotKeysFromMetaData()
         }
 
-        print("got \(hotKeysMetaData.capacity) from disk")
+        print("got \(hotKeysMetaData.keys.count) from disk")
     }
     
     private func buildHotKeysFromMetaData() {
@@ -145,11 +145,11 @@ struct HotKeyMetaData: Codable {
 
 // work around https://github.com/soffes/HotKey/issues/17
 extension HotKeysController: NSMenuDelegate {
-//    func menuWillOpen(_ menu: NSMenu) {
-//        disableHotKeys()
-//    }
-//
-//    func menuDidClose(_ menu: NSMenu) {
-//        enableHotKeys()
-//    }
+    func menuWillOpen(_ menu: NSMenu) {
+        removeAllHotKeys()
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        buildHotKeysFromMetaData()
+    }
 }
