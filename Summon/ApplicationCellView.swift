@@ -16,5 +16,6 @@ class ApplicationCellView: NSTableCellView {
     
     @IBOutlet weak var bindButton: NSButton!
     @IBOutlet weak var deleteButton: NSButton!
+    @IBOutlet weak var hotKeyLabel: NSTextField!
     
 }
