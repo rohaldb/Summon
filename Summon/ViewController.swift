@@ -76,30 +76,35 @@ class ViewController: NSViewController {
         setHotKeysLabel()
     }
     
-    func setHotKeysLabel() {
-        hotKeysLabel.stringValue = buildStringFromKeyCombination()
+    func assignColorToPartOfString(stringBuilder: NSMutableAttributedString, startIndex: Int, length: Int) {
+        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.purple, range: NSRange(location:startIndex, length: length))
     }
     
-    func buildStringFromKeyCombination() -> String {
+    func setHotKeysLabel() {
+        
         let modifiers = keyCombination.modifiers.intersection(.deviceIndependentFlagsMask)
-        var stringBuilder = ""
-            
+        let string = "^⌥⌘⇧" + keyCombination.char
+        let stringBuilder = NSMutableAttributedString(string: string)
+        stringBuilder.addAttribute(NSAttributedString.Key.foregroundColor, value: NSColor.gray, range: NSRange(location: 0, length: 4))
+        
         if modifiers.contains(.control) {
-           stringBuilder += "⌃"
+            assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 0, length: 1)
         }
         if modifiers.contains(.option) {
-           stringBuilder += "⌥"
+            assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 1, length: 1)
         }
         if modifiers.contains(.command) {
-           stringBuilder += "⌘"
+            assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 2, length: 1)
         }
         if modifiers.contains(.shift) {
-           stringBuilder += "⇧"
+            assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 3, length: 1)
         }
         
-        stringBuilder += keyCombination.char
-        
-        return stringBuilder
+        if string.count == 5 {
+            assignColorToPartOfString(stringBuilder: stringBuilder, startIndex: 4, length: 1)
+        }
+
+        hotKeysLabel.attributedStringValue = stringBuilder
     }
     
     @IBAction func addButtonPressed(_ sender: NSButton) {
@@ -126,6 +131,7 @@ class ViewController: NSViewController {
     override func viewDidAppear() {
         super.viewWillAppear()
 
+        setHotKeysLabel()
         view.window?.styleMask.remove(.resizable)
         view.window?.styleMask.remove(.miniaturizable)
         view.window?.center()
