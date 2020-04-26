@@ -43,11 +43,12 @@ class HotKeysController: NSObject {
             guard self != nil else { return }
             
             let runningApps = NSWorkspace.shared.runningApplications
-            let chrome = runningApps.first{$0.localizedName == applicationName}
-            if let runningChrome = chrome {
-                runningChrome.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
+            let app = runningApps.first{$0.localizedName == applicationName}
+            if let app = app {
+                app.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
             } else {
-                print(applicationName, " is not open")
+                print(applicationName, " is not open, opening")
+                NSWorkspace.shared.launchApplication(applicationName)
             }
         }
     }
