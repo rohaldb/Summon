@@ -20,12 +20,15 @@ class ViewController: NSViewController {
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
+    var filteredApplicationMetaData: [Application]!
     var mode = Mode.AwaitingApplicationSelect
     var selectedApplication: Application!
+    var applicationNameTableFilter = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        filteredApplicationMetaData = applicationMetaData
         hotKeyController = appDelegate.hotKeysController
         configureTableView()
         conifigureKeyEvents()
@@ -112,6 +115,19 @@ class ViewController: NSViewController {
 
         hotKeysLabel.attributedStringValue = stringBuilder
     }
+
+    
+    @IBAction func searchFieldChanged(_ sender: NSSearchField) {
+        applicationNameTableFilter = sender.stringValue
+        
+        if applicationNameTableFilter == "" {
+            filteredApplicationMetaData = applicationMetaData
+        } else {
+            filteredApplicationMetaData = applicationMetaData.filter {$0.name.lowercased().contains(applicationNameTableFilter.lowercased())}
+        }
+        
+        tableView.reloadData()
+    }
     
     func transitionToListeningForKeysMode() {
         mode = Mode.ListeningForKeys
@@ -141,7 +157,7 @@ class ViewController: NSViewController {
 extension ViewController: NSTableViewDataSource {
   
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return applicationMetaData.count
+        return filteredApplicationMetaData.count
     }
 }
 
@@ -149,15 +165,15 @@ extension ViewController: NSTableViewDelegate {
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
         
-        let item = applicationMetaData[row]
+        let application = filteredApplicationMetaData[row]
         
         switch tableColumn?.identifier {
         case NSUserInterfaceItemIdentifier(rawValue: "applicationColID"):
             let cellIdentifier = NSUserInterfaceItemIdentifier(rawValue: "applicationRowID")
             guard let cellView = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? ApplicationCellView else { return nil }
             
-            cellView.nameField.stringValue = item.name
-            cellView.icon.image = item.icon
+            cellView.nameField.stringValue = application.name
+            cellView.icon.image = application.icon
             
             cellView.deleteButton.tag = row
             cellView.deleteButton.action =  #selector(self.deleteBinding)
@@ -165,7 +181,7 @@ extension ViewController: NSTableViewDelegate {
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if let _ = hotKeyController?.hotKeys[item.name] {
+            if let _ = hotKeyController?.hotKeys[application.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
             }
