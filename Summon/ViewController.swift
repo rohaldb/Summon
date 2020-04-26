@@ -158,6 +158,7 @@ class ViewController: NSViewController {
         mode = Mode.AwaitingApplicationSelect
         tableView.reloadData()
         descriptionLabel.stringValue = "Select an Application from the table below"
+        selectedApplicationIcon.image = nil
     }
     
     override func viewDidAppear() {
@@ -169,7 +170,6 @@ class ViewController: NSViewController {
     }
     
 }
-
 
 
 extension ViewController: NSTableViewDataSource {
