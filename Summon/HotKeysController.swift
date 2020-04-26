@@ -11,26 +11,29 @@ import AppKit
 
 class HotKeysController: NSObject {
 
-    public var hotKeys = [String:HotKey]()
+    public var hotKeys = [String:HotKeyMetaData]()
     
     override init() {
         super.init()
     }
     
-    public func addHotKey(keyCode: UInt16, modifierFlags: NSEvent.ModifierFlags, applicationName: String) {
+    public func addHotKey(char: String, keyCode: UInt16, modifiers: NSEvent.ModifierFlags, applicationName: String) {
         
-        let keyCombo = KeyCombo(carbonKeyCode: UInt32(keyCode), carbonModifiers: modifierFlags.carbonFlags)
+        let carbonKeyCode = UInt32(keyCode)
+        
+        let keyCombo = KeyCombo(carbonKeyCode: carbonKeyCode, carbonModifiers: modifiers.carbonFlags)
 
-        let hotkey = HotKey(keyCombo: keyCombo)
-        hotkey.keyDownHandler = self.getHandler(applicationName: applicationName)
+        let hotKey = HotKey(keyCombo: keyCombo)
+        hotKey.keyDownHandler = self.getHandler(applicationName: applicationName)
         
-        hotKeys[applicationName] = hotkey
+        let summary = buildStringSummarOfHotKey(char: char, modifiers: modifiers)
+        
+        hotKeys[applicationName] = HotKeyMetaData(hotKey: hotKey, modifiers: modifiers, keyCode: carbonKeyCode, char: char, summary: summary)
         
         print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
     
     public func removeHotKey(applicationName: String) {
-        hotKeys[applicationName] = nil
         hotKeys.removeValue(forKey: applicationName)
     }
     
@@ -49,6 +52,28 @@ class HotKeysController: NSObject {
         }
     }
     
+    private func buildStringSummarOfHotKey(char: String, modifiers: NSEvent.ModifierFlags) -> String {
+        var stringBuilder = ""
+            
+        if modifiers.contains(.control) {
+           stringBuilder += "⌃"
+        }
+        if modifiers.contains(.option) {
+           stringBuilder += "⌥"
+        }
+        if modifiers.contains(.command) {
+           stringBuilder += "⌘"
+        }
+        if modifiers.contains(.shift) {
+           stringBuilder += "⇧"
+        }
+        
+        stringBuilder += char
+        
+        return stringBuilder
+    }
+    
+    
     func enableHotKeys() {
         //need to add all hotkeys
     }
@@ -57,6 +82,14 @@ class HotKeysController: NSObject {
         //need to add all hotkeys
     }
 
+}
+
+struct HotKeyMetaData {
+    var hotKey: HotKey
+    var modifiers: NSEvent.ModifierFlags
+    var keyCode: UInt32
+    var char: String
+    var summary: String
 }
 
 // work around https://github.com/soffes/HotKey/issues/17

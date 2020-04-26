@@ -84,8 +84,9 @@ class ViewController: NSViewController {
         setHotKeysLabel()
         
         hotKeyController?.addHotKey(
+            char: keyCombination.char,
             keyCode: keyCombination.keyCode,
-            modifierFlags: keyCombination.modifiers,
+            modifiers: keyCombination.modifiers,
             applicationName: selectedApplication.name
         )
         
@@ -190,9 +191,10 @@ extension ViewController: NSTableViewDelegate {
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if let _ = hotKeyController?.hotKeys[application.name] {
+            if let hotKeyMetaData = hotKeyController?.hotKeys[application.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
+                cellView.hotKeyLabel.stringValue = hotKeyMetaData.summary
             }
             
             return cellView
