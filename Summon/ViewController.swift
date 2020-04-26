@@ -12,15 +12,13 @@ import Cocoa
 class ViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
-    @IBOutlet weak var applicationNameTextField: NSTextFieldCell!
     
     @IBOutlet weak var hotKeysLabel: NSTextField!
-    @IBOutlet weak var modifiersButton: NSButtonCell!
-    var keyCombination = KeyCombination(modifiers: [], chars: "")
+    
+    var keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     var hotKeyController: HotKeysController?
     var applicationSearcher: ApplicationSearcher!
-    var listeningForHotKey = true
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
     var mode = Mode.DefaultMode
     
@@ -56,20 +54,16 @@ class ViewController: NSViewController {
             return
         }
         
-        keyCombination.chars = event.charactersIgnoringModifiers ?? ""
+        if keyCombination.modifiers.isEmpty {
+            print("modifier flags are empty, doing nothing")
+            return
+        }
+        
+        keyCombination.char = event.charactersIgnoringModifiers ?? ""
+        keyCombination.keyCode = event.keyCode
         setHotKeysLabel()
         
         transitionToAwaitingBindingMode()
-//        if modifierFlags.isEmpty {
-//            print("modifier flags are empty, doing nothing")
-//            return
-//        } else {
-//            hotKeysLabel.stringValue += event.charactersIgnoringModifiers!
-////            hotKeyController?.addHotKey(event: event, applicationName: applicationNameTextField.stringValue)
-//        }
-//
-//        listeningForHotKey = false
-//        print("listening for keys \(listeningForHotKey)")
     }
     
     override func flagsChanged(with event: NSEvent) {
@@ -77,7 +71,7 @@ class ViewController: NSViewController {
             print("not listening for keys yet")
             return
         }
-        
+         
         keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         setHotKeysLabel()
     }
@@ -103,7 +97,7 @@ class ViewController: NSViewController {
            stringBuilder += "⇧"
         }
         
-        stringBuilder += keyCombination.chars
+        stringBuilder += keyCombination.char
         
         return stringBuilder
     }
@@ -112,12 +106,8 @@ class ViewController: NSViewController {
         transitionToListeningForKeysMode()
     }
     
-    @IBAction func deleteButtonPressed(_ sender: Any) {
-        hotKeyController?.removeHotKey(applicationName: applicationNameTextField.stringValue)
-    }
-    
     func transitionToDefaultMode() {
-        keyCombination = KeyCombination(modifiers: [], chars: "")
+        keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
         setHotKeysLabel()
         mode = Mode.DefaultMode
         tableView.reloadData()
@@ -150,7 +140,6 @@ extension ViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return applicationMetaData.count
     }
-
 }
 
 extension ViewController: NSTableViewDelegate {
@@ -179,7 +168,7 @@ extension ViewController: NSTableViewDelegate {
             
             if mode == Mode.AwaitingBinding {
                 cellView.bindButton.isHidden = false
-            } else if FakeApplicationBindings[item.name] == true {
+            } else if let _ = hotKeyController?.hotKeys[item.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
             }
@@ -193,14 +182,24 @@ extension ViewController: NSTableViewDelegate {
     
     @objc func bindApplicationToHotKey(button:NSButton){
         let row = button.tag
-        //perform bind
         print("bind button clicked in row \(row)");
+        
+        let applicationName = applicationMetaData[row].name
+        
+        hotKeyController?.addHotKey(
+            keyCode: keyCombination.keyCode,
+            modifierFlags: keyCombination.modifiers,
+            applicationName: applicationName
+        )
+        
         transitionToDefaultMode()
     }
     
     @objc func deleteBinding(button:NSButton){
         let row = button.tag
-        //perform delete
+        let applicationName = applicationMetaData[row].name
+        hotKeyController?.removeHotKey(applicationName: applicationName)
+        tableView.reloadData()
         print("delete button clicked in row \(row)");
     }
     
@@ -212,14 +211,9 @@ extension ViewController: NSTableViewDelegate {
 
 struct KeyCombination {
     var modifiers: NSEvent.ModifierFlags
-    var chars: String
+    var char: String
+    var keyCode: UInt16
 }
-
-var FakeApplicationBindings = [
-    "Google Chrome": true,
-    "iTerm2": false,
-    "SourceTree": false,
-]
 
 enum Mode {
     case DefaultMode
