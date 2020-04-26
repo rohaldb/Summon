@@ -16,18 +16,15 @@ class HotKeysController: NSObject {
     
     override init() {
         super.init()
+        
+        searchForPersistedData()
     }
     
     public func addHotKey(char: String, keyCode: UInt16, modifiers: NSEvent.ModifierFlags, applicationName: String) {
         
         let carbonKeyCode = UInt32(keyCode)
-        
-        let keyCombo = KeyCombo(carbonKeyCode: carbonKeyCode, carbonModifiers: modifiers.carbonFlags)
-
-        let hotKey = HotKey(keyCombo: keyCombo)
-        hotKey.keyDownHandler = self.getHandler(applicationName: applicationName)
-                
-        let hotKeyMetaData = HotKeyMetaData.init(
+    
+        let hotKeyMetaData = HotKeyMetaData(
             control: modifiers.contains(.control),
             command: modifiers.contains(.command),
             shift: modifiers.contains(.shift),
@@ -37,14 +34,17 @@ class HotKeysController: NSObject {
         )
         
         hotKeysMetaData[applicationName] = hotKeyMetaData
-        hotKeys[applicationName] = hotKey
+        hotKeys[applicationName] = createHotKeyFromMetaData(applicationName: applicationName, hotKeyMetaData: hotKeyMetaData)
         
-        print("Adding hotkey: \(keyCombo) -> \(applicationName)")
+        persistState()
+        
+        print("Adding hotkey for \(applicationName)")
     }
     
     public func removeHotKey(applicationName: String) {
         hotKeys.removeValue(forKey: applicationName)
         hotKeysMetaData.removeValue(forKey: applicationName)
+        persistState()
     }
     
     private func getHandler(applicationName: String) -> (() -> Void) {
@@ -63,13 +63,53 @@ class HotKeysController: NSObject {
         }
     }
     
-    
-    func enableHotKeys() {
-        //need to add all hotkeys
+    private func persistState() {
+        let defaults = UserDefaults.standard
+        defaults.dictionaryRepresentation().keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+        defaults.set(try? PropertyListEncoder().encode(hotKeysMetaData), forKey:"HotKeysMetaData")
     }
     
-    func disableHotKeys() {
-        //need to add all hotkeys
+    private func searchForPersistedData() {
+        if let data = UserDefaults.standard.value(forKey:"HotKeysMetaData") as? Data {
+            hotKeysMetaData = try! PropertyListDecoder().decode(Dictionary<String, HotKeyMetaData>.self, from: data)
+            buildHotKeysFromMetaData()
+        }
+
+        print("got \(hotKeysMetaData.capacity) from disk")
+    }
+    
+    private func buildHotKeysFromMetaData() {
+        for (applicationName, hotKeyMetaData) in hotKeysMetaData {
+            hotKeys[applicationName] = createHotKeyFromMetaData(applicationName: applicationName, hotKeyMetaData: hotKeyMetaData)
+        }
+    }
+    
+    private func createHotKeyFromMetaData(applicationName: String, hotKeyMetaData: HotKeyMetaData) -> HotKey{
+        var modifiers = NSEvent.ModifierFlags()
+        if hotKeyMetaData.control {
+            modifiers = modifiers.union(.control)
+        }
+        if hotKeyMetaData.command {
+           modifiers = modifiers.union(.command)
+        }
+        if hotKeyMetaData.shift {
+           modifiers = modifiers.union(.shift)
+        }
+        if hotKeyMetaData.option {
+           modifiers = modifiers.union(.option)
+        }
+        
+        let keyCombo = KeyCombo(carbonKeyCode: hotKeyMetaData.keyCode, carbonModifiers: modifiers.carbonFlags)
+
+        let hotKey = HotKey(keyCombo: keyCombo)
+        hotKey.keyDownHandler = self.getHandler(applicationName: applicationName)
+        return hotKey
+    }
+    
+    private func removeAllHotKeys() {
+        hotKeys = [String:HotKey]()
     }
 
 }
@@ -87,14 +127,14 @@ struct HotKeyMetaData: Codable {
         if self.control {
            stringBuilder += "⌃"
         }
-        if self.option {
-           stringBuilder += "⌥"
-        }
         if self.command {
            stringBuilder += "⌘"
         }
         if self.shift {
            stringBuilder += "⇧"
+        }
+        if self.option {
+           stringBuilder += "⌥"
         }
         
         stringBuilder += char
@@ -105,11 +145,11 @@ struct HotKeyMetaData: Codable {
 
 // work around https://github.com/soffes/HotKey/issues/17
 extension HotKeysController: NSMenuDelegate {
-    func menuWillOpen(_ menu: NSMenu) {
-        disableHotKeys()
-    }
-
-    func menuDidClose(_ menu: NSMenu) {
-        enableHotKeys()
-    }
+//    func menuWillOpen(_ menu: NSMenu) {
+//        disableHotKeys()
+//    }
+//
+//    func menuDidClose(_ menu: NSMenu) {
+//        enableHotKeys()
+//    }
 }
