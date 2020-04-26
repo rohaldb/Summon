@@ -11,7 +11,8 @@ import AppKit
 
 class HotKeysController: NSObject {
 
-    public var hotKeys = [String:HotKeyMetaData]()
+    public var hotKeysMetaData = [String:HotKeyMetaData]()
+    public var hotKeys = [String:HotKey]()
     
     override init() {
         super.init()
@@ -35,13 +36,15 @@ class HotKeysController: NSObject {
             char: char
         )
         
-        hotKeys[applicationName] = hotKeyMetaData
+        hotKeysMetaData[applicationName] = hotKeyMetaData
+        hotKeys[applicationName] = hotKey
         
         print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
     
     public func removeHotKey(applicationName: String) {
         hotKeys.removeValue(forKey: applicationName)
+        hotKeysMetaData.removeValue(forKey: applicationName)
     }
     
     private func getHandler(applicationName: String) -> (() -> Void) {

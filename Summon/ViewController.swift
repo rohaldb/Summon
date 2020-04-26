@@ -199,7 +199,7 @@ extension ViewController: NSTableViewDelegate {
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if let hotKeyMetaData = hotKeyController?.hotKeys[application.name] {
+            if let hotKeyMetaData = hotKeyController?.hotKeysMetaData[application.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
                 cellView.hotKeyLabel.stringValue = hotKeyMetaData.summary
