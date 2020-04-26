@@ -25,10 +25,17 @@ class HotKeysController: NSObject {
 
         let hotKey = HotKey(keyCombo: keyCombo)
         hotKey.keyDownHandler = self.getHandler(applicationName: applicationName)
+                
+        let hotKeyMetaData = HotKeyMetaData.init(
+            control: modifiers.contains(.control),
+            command: modifiers.contains(.command),
+            shift: modifiers.contains(.shift),
+            option: modifiers.contains(.option),
+            keyCode: carbonKeyCode,
+            char: char
+        )
         
-        let summary = buildStringSummarOfHotKey(char: char, modifiers: modifiers)
-        
-        hotKeys[applicationName] = HotKeyMetaData(hotKey: hotKey, modifiers: modifiers, keyCode: carbonKeyCode, char: char, summary: summary)
+        hotKeys[applicationName] = hotKeyMetaData
         
         print("Adding hotkey: \(keyCombo) -> \(applicationName)")
     }
@@ -53,27 +60,6 @@ class HotKeysController: NSObject {
         }
     }
     
-    private func buildStringSummarOfHotKey(char: String, modifiers: NSEvent.ModifierFlags) -> String {
-        var stringBuilder = ""
-            
-        if modifiers.contains(.control) {
-           stringBuilder += "⌃"
-        }
-        if modifiers.contains(.option) {
-           stringBuilder += "⌥"
-        }
-        if modifiers.contains(.command) {
-           stringBuilder += "⌘"
-        }
-        if modifiers.contains(.shift) {
-           stringBuilder += "⇧"
-        }
-        
-        stringBuilder += char
-        
-        return stringBuilder
-    }
-    
     
     func enableHotKeys() {
         //need to add all hotkeys
@@ -85,12 +71,33 @@ class HotKeysController: NSObject {
 
 }
 
-struct HotKeyMetaData {
-    var hotKey: HotKey
-    var modifiers: NSEvent.ModifierFlags
+struct HotKeyMetaData: Codable {
+    let control: Bool
+    let command: Bool
+    let shift: Bool
+    let option: Bool
     var keyCode: UInt32
     var char: String
-    var summary: String
+    var summary: String {
+        var stringBuilder = ""
+            
+        if self.control {
+           stringBuilder += "⌃"
+        }
+        if self.option {
+           stringBuilder += "⌥"
+        }
+        if self.command {
+           stringBuilder += "⌘"
+        }
+        if self.shift {
+           stringBuilder += "⇧"
+        }
+        
+        stringBuilder += char
+        
+        return stringBuilder
+    }
 }
 
 // work around https://github.com/soffes/HotKey/issues/17
