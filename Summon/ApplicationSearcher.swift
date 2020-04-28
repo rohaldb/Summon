@@ -26,7 +26,7 @@ class ApplicationSearcher: NSObject {
         var applications = [Application]()
     
         for url in urls {
-            if fileManager.isExecutableFile(atPath: url.path) {
+            if shouldIncludeApplication(url: url) {
                 let name = url.deletingPathExtension().lastPathComponent
                 let icon = NSWorkspace.shared.icon(forFile: url.path)
                 applications.append(Application(name: name, url: url, icon: icon))
@@ -34,6 +34,15 @@ class ApplicationSearcher: NSObject {
         }
         
         return applications
+    }
+    
+    private func shouldIncludeApplication(url: URL) -> Bool {
+        let isExecutable = FileManager.default.isExecutableFile(atPath: url.path)
+        let isApp = url.lastPathComponent.hasSuffix(".app")
+        if (isExecutable && isApp) {
+            return true
+        }
+        return false
     }
     
 }
