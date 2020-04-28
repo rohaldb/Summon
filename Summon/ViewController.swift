@@ -74,7 +74,7 @@ class ViewController: NSViewController {
             return
         }
          
-        keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask).intersection(hotKeyController.permittedModifiers)
         setHotKeysLabel()
     }
     

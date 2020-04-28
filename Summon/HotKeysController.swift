@@ -13,6 +13,7 @@ class HotKeysController: NSObject {
 
     public var hotKeysMetaData = [String:HotKeyMetaData]()
     public var hotKeys = [String:HotKey]()
+    public var permittedModifiers = NSEvent.ModifierFlags().union(.command).union(.option).union(.control).union(.shift)
     
     override init() {
         super.init()
