@@ -108,6 +108,10 @@ class HotKeysController: NSObject {
         return hotKey
     }
     
+    public func getKeyCodeDescription(keyCode: UInt16) -> String {
+        return Key(carbonKeyCode: UInt32(keyCode))?.description ?? "?"
+    }
+    
     private func removeAllHotKeys() {
         hotKeys = [String:HotKey]()
     }

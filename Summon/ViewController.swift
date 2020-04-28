@@ -18,7 +18,7 @@ class ViewController: NSViewController {
     
     var keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    var hotKeyController: HotKeysController?
+    var hotKeyController: HotKeysController!
     var applicationSearcher: ApplicationSearcher!
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
     var filteredApplicationMetaData: [Application]!
@@ -79,11 +79,12 @@ class ViewController: NSViewController {
     }
     
     func completeHotKeyBinding(event: NSEvent) {
-        keyCombination.char = event.charactersIgnoringModifiers ?? ""
         keyCombination.keyCode = event.keyCode
+        keyCombination.char = hotKeyController.getKeyCodeDescription(keyCode: event.keyCode)
+        print("find me ben", keyCombination.char)
         setHotKeysLabel()
         
-        hotKeyController?.addHotKey(
+        hotKeyController.addHotKey(
             char: keyCombination.char,
             keyCode: keyCombination.keyCode,
             modifiers: keyCombination.modifiers,
@@ -199,7 +200,7 @@ extension ViewController: NSTableViewDelegate {
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if let hotKeyMetaData = hotKeyController?.hotKeysMetaData[application.name] {
+            if let hotKeyMetaData = hotKeyController.hotKeysMetaData[application.name] {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
                 cellView.hotKeyLabel.stringValue = hotKeyMetaData.summary
@@ -221,7 +222,7 @@ extension ViewController: NSTableViewDelegate {
     @objc func deleteBinding(button:NSButton){
         let row = button.tag
         let applicationName = filteredApplicationMetaData[row].name
-        hotKeyController?.removeHotKey(applicationName: applicationName)
+        hotKeyController.removeHotKey(applicationName: applicationName)
         tableView.reloadData()
         print("delete button clicked in row \(row)");
     }
