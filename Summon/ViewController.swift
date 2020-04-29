@@ -161,13 +161,13 @@ class ViewController: NSViewController {
         mode = Mode.AwaitingApplicationSelect
         resetHotKeysLabel()
         descriptionLabel.setStringValue("Select an Application from the table below", animated: true)
-        selectedApplicationIcon.image = nil
     }
     
     func transitionToNotifyingSuccess() {
         mode = Mode.NotifyingSuccess
         descriptionLabel.setStringValue("Success", animated: true)
         tableView.reloadData()
+        selectedApplicationIcon.image = nil
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
             self.transitionToAwaitingApplicationSelect()
         })
