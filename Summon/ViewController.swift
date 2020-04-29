@@ -95,7 +95,7 @@ class ViewController: NSViewController {
             applicationName: selectedApplication.name
         )
         
-        transitionToAwaitingApplicationSelect()
+        transitionToNotifyingSuccess()
     }
     
     func setHotKeysLabel() {
@@ -158,12 +158,24 @@ class ViewController: NSViewController {
     }
     
     func transitionToAwaitingApplicationSelect() {
-        keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
-        setHotKeysLabel()
         mode = Mode.AwaitingApplicationSelect
-        tableView.reloadData()
+        resetHotKeysLabel()
         descriptionLabel.stringValue = "Select an Application from the table below"
         selectedApplicationIcon.image = nil
+    }
+    
+    func transitionToNotifyingSuccess() {
+        mode = Mode.NotifyingSuccess
+        descriptionLabel.stringValue = "Success!"
+        tableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
+            self.transitionToAwaitingApplicationSelect()
+        })
+    }
+    
+    func resetHotKeysLabel() {
+        keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
+        setHotKeysLabel()
     }
     
     override func viewDidAppear() {
@@ -251,4 +263,5 @@ struct KeyCombination {
 enum Mode {
     case ListeningForKeys
     case AwaitingApplicationSelect
+    case NotifyingSuccess
 }
