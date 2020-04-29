@@ -6,8 +6,9 @@
 //  Copyright © 2020 Benjamin Rohald. All rights reserved.
 //
 
-
 import Cocoa
+
+let ESCAPE_KEYCODE: UInt16 = 0x35
 
 class ViewController: NSViewController {
 
@@ -57,6 +58,10 @@ class ViewController: NSViewController {
         if mode != Mode.ListeningForKeys {
             print("not listening for keys yet")
             return
+        }
+        
+        if event.keyCode == ESCAPE_KEYCODE {
+            transitionToAwaitingApplicationSelect()
         }
         
         if keyCombination.modifiers.isEmpty {
