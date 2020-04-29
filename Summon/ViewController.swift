@@ -154,19 +154,19 @@ class ViewController: NSViewController {
         mode = Mode.ListeningForKeys
         tableView.reloadData()
         let selectedApplicationName = selectedApplication.name
-        descriptionLabel.stringValue = "Enter a Hot Key to bind to \(selectedApplicationName)"
+        descriptionLabel.setStringValue("Enter a Hot Key to bind to \(selectedApplicationName)", animated: true)
     }
     
     func transitionToAwaitingApplicationSelect() {
         mode = Mode.AwaitingApplicationSelect
         resetHotKeysLabel()
-        descriptionLabel.stringValue = "Select an Application from the table below"
+        descriptionLabel.setStringValue("Select an Application from the table below", animated: true)
         selectedApplicationIcon.image = nil
     }
     
     func transitionToNotifyingSuccess() {
         mode = Mode.NotifyingSuccess
-        descriptionLabel.stringValue = "Success!"
+        descriptionLabel.setStringValue("Success", animated: true)
         tableView.reloadData()
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
             self.transitionToAwaitingApplicationSelect()
