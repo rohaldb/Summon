@@ -29,7 +29,9 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+
         transitionToAwaitingApplicationSelect()
         filteredApplicationMetaData = applicationMetaData
         hotKeysController = appDelegate.hotKeysController
