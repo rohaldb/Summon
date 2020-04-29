@@ -11,9 +11,9 @@ import AppKit
 
 class HotKeysController: NSObject {
 
-    public var hotKeysMetaData = [String:HotKeyMetaData]()
-    public var hotKeys = [String:HotKey]()
-    public var permittedModifiers = NSEvent.ModifierFlags().union(.command).union(.option).union(.control).union(.shift)
+    private var hotKeysMetaData = [String:HotKeyMetaData]()
+    private var hotKeys = [String:HotKey]()
+    private var permittedModifiers = NSEvent.ModifierFlags().union(.command).union(.option).union(.control).union(.shift)
     
     override init() {
         super.init()
@@ -111,6 +111,21 @@ class HotKeysController: NSObject {
     
     public func getKeyCodeDescription(keyCode: UInt16) -> String {
         return Key(carbonKeyCode: UInt32(keyCode))?.description ?? "?"
+    }
+    
+    public func getPermittedModifiers() -> NSEvent.ModifierFlags {
+        return permittedModifiers
+    }
+    
+    public func hotKeyExistsForApplication(applicationName: String) -> Bool {
+        return hotKeys[applicationName] != nil
+    }
+    
+    public func getHotKeySummary(applicationName: String) -> String? {
+        if !hotKeyExistsForApplication(applicationName: applicationName) {
+            return nil
+        }
+        return hotKeysMetaData[applicationName]?.summary
     }
     
     private func removeAllHotKeys() {

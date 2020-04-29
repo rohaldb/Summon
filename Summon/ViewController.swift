@@ -18,7 +18,7 @@ class ViewController: NSViewController {
     
     var keyCombination = KeyCombination(modifiers: [], char: "", keyCode: 0)
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
-    var hotKeyController: HotKeysController!
+    var hotKeysController: HotKeysController!
     var applicationSearcher: ApplicationSearcher!
     var applicationMetaData = ApplicationSearcher().getAllApplications().sorted(by: {$0.name < $1.name})
     var filteredApplicationMetaData: [Application]!
@@ -31,7 +31,7 @@ class ViewController: NSViewController {
     
         transitionToAwaitingApplicationSelect()
         filteredApplicationMetaData = applicationMetaData
-        hotKeyController = appDelegate.hotKeysController
+        hotKeysController = appDelegate.hotKeysController
         configureTableView()
         conifigureKeyEvents()
     }
@@ -74,17 +74,16 @@ class ViewController: NSViewController {
             return
         }
          
-        keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask).intersection(hotKeyController.permittedModifiers)
+        keyCombination.modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask).intersection(hotKeysController.getPermittedModifiers())
         setHotKeysLabel()
     }
     
     func completeHotKeyBinding(event: NSEvent) {
         keyCombination.keyCode = event.keyCode
-        keyCombination.char = hotKeyController.getKeyCodeDescription(keyCode: event.keyCode)
-        print("find me ben", keyCombination.char)
+        keyCombination.char = hotKeysController.getKeyCodeDescription(keyCode: event.keyCode)
         setHotKeysLabel()
         
-        hotKeyController.addHotKey(
+        hotKeysController.addHotKey(
             char: keyCombination.char,
             keyCode: keyCombination.keyCode,
             modifiers: keyCombination.modifiers,
@@ -200,10 +199,15 @@ extension ViewController: NSTableViewDelegate {
             cellView.hotKeyLabel.isHidden = true
             cellView.deleteButton.isHidden = true
             
-            if let hotKeyMetaData = hotKeyController.hotKeysMetaData[application.name] {
+            if hotKeysController.hotKeyExistsForApplication(applicationName: application.name) {
                 cellView.deleteButton.isHidden = false
                 cellView.hotKeyLabel.isHidden = false
-                cellView.hotKeyLabel.stringValue = hotKeyMetaData.summary
+                if let summary = hotKeysController.getHotKeySummary(applicationName: application.name) {
+                    cellView.hotKeyLabel.stringValue = summary
+                } else {
+                    cellView.hotKeyLabel.stringValue = "�"
+                }
+                
             }
             
             return cellView
@@ -222,7 +226,7 @@ extension ViewController: NSTableViewDelegate {
     @objc func deleteBinding(button:NSButton){
         let row = button.tag
         let applicationName = filteredApplicationMetaData[row].name
-        hotKeyController.removeHotKey(applicationName: applicationName)
+        hotKeysController.removeHotKey(applicationName: applicationName)
         tableView.reloadData()
         print("delete button clicked in row \(row)");
     }
