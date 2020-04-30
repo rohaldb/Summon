@@ -34,6 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let menu = menu {
             statusBarItem?.menu = menu
         }
+        
+        showPreferences(self)
     }
     
     @IBAction func showPreferences(_ sender: Any) {
