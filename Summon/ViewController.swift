@@ -25,6 +25,7 @@ class ViewController: NSViewController {
     var mode = Mode.AwaitingApplicationSelect
     var selectedApplication: Application!
     var applicationNameTableFilter = ""
+    var isTableRowSelectable = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,6 +164,7 @@ class ViewController: NSViewController {
         mode = Mode.AwaitingApplicationSelect
         resetHotKeysLabel()
         hotKeysLabel.isHidden = true
+        isTableRowSelectable = true
         descriptionLabel.setStringValue("Select an Application from the table below", animated: true)
     }
     
@@ -170,6 +172,7 @@ class ViewController: NSViewController {
         mode = Mode.NotifyingSuccess
         descriptionLabel.setStringValue("Success", animated: true)
         tableView.reloadData()
+        isTableRowSelectable = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
             self.transitionToAwaitingApplicationSelect()
         })
@@ -237,6 +240,7 @@ extension ViewController: NSTableViewDelegate {
     }
     
     func tableViewSelectionDidChange(_ notification: Notification) {
+        if mode == Mode.NotifyingSuccess { return }
         selectedApplication = filteredApplicationMetaData[tableView.selectedRow]
         transitionToListeningForKeysMode()
     }
@@ -247,6 +251,10 @@ extension ViewController: NSTableViewDelegate {
         hotKeysController.removeHotKey(applicationName: applicationName)
         tableView.reloadData()
         print("delete button clicked in row \(row)");
+    }
+    
+    func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+        return isTableRowSelectable
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
