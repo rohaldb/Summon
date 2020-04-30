@@ -13,7 +13,6 @@ let ESCAPE_KEYCODE: UInt16 = 0x35
 class ViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
-    @IBOutlet weak var selectedApplicationIcon: NSImageView!
     @IBOutlet weak var hotKeysLabel: NSTextField!
     @IBOutlet weak var descriptionLabel: NSTextField!
     
@@ -156,12 +155,14 @@ class ViewController: NSViewController {
         mode = Mode.ListeningForKeys
         tableView.reloadData()
         let selectedApplicationName = selectedApplication.name
+        hotKeysLabel.isHidden = false
         descriptionLabel.setStringValue("Enter a Hot Key to bind to \(selectedApplicationName)", animated: true)
     }
     
     func transitionToAwaitingApplicationSelect() {
         mode = Mode.AwaitingApplicationSelect
         resetHotKeysLabel()
+        hotKeysLabel.isHidden = true
         descriptionLabel.setStringValue("Select an Application from the table below", animated: true)
     }
     
@@ -169,7 +170,6 @@ class ViewController: NSViewController {
         mode = Mode.NotifyingSuccess
         descriptionLabel.setStringValue("Success", animated: true)
         tableView.reloadData()
-        selectedApplicationIcon.image = nil
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
             self.transitionToAwaitingApplicationSelect()
         })
@@ -238,7 +238,6 @@ extension ViewController: NSTableViewDelegate {
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         selectedApplication = filteredApplicationMetaData[tableView.selectedRow]
-        selectedApplicationIcon.image = selectedApplication.icon
         transitionToListeningForKeysMode()
     }
     
