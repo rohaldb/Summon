@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func setUpStatusBar() {
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        let itemImage = NSImage(named: "rank")
+        let itemImage = NSImage(named: "menubaricon")
         itemImage?.isTemplate = true
         statusBarItem?.button?.image = itemImage
 
