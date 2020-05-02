@@ -50,6 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         guard let vc = storyboard.instantiateController(withIdentifier: .init(stringLiteral: "preferencesID")) as? ViewController else { return }
         settingsWindow = NSWindow(contentViewController: vc)
+        settingsWindow?.title = "Summon"
     }
     
 }
