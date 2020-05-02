@@ -101,7 +101,7 @@
                                                                     </textFieldCell>
                                                                 </textField>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yYN-Og-zU0">
-                                                                    <rect key="frame" x="297" y="17" width="60" height="16"/>
+                                                                    <rect key="frame" x="283" y="17" width="74" height="16"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Label" id="RVA-hT-ytC">
                                                                         <font key="font" metaFont="system"/>
