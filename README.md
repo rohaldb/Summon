@@ -2,9 +2,9 @@
 
 Summon is a MacOS status bar application that lets you configure custom hotkeys that bring applications to attention. The behaviour mimics navigating via `⌘-tab`, with the added benefit that Summon will launch the application if it's closed.
 
-<div style="text-align: center">
-![](./assets/demo.gif)
-</div>
+<p align="center">
+  <img width="85%" src="./assets/demo.gif">
+</p>
 
 ## Usage
 
@@ -12,7 +12,7 @@ Summon's preferences will open by default on launch. You can access them anytime
 
 ![](./assets/statusbar.png)
 
-To make a new binding, click on an application and enter a hotkey. You should enter the modifiers **before** you enter the key (see below). 
+To make a new binding, click on an application and enter a hotkey. You should enter the modifiers **before** you enter the key (see below).
 
 ## What is a hotkey
 
