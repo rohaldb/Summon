@@ -1,6 +1,6 @@
 # Summon
 
-Summon is a MacOS status bar application that lets you configure custom hotkeys that bring applications to attention. The behaviour mimics navigating via `⌘-tab`, with the added benefit that Summon will launch the application if it's closed.
+Summon is a MacOS status bar application that lets you configure custom hotkeys that bring applications to attention. The behaviour mimics navigating via `⌘tab`, with the added benefit that Summon will launch the application if it's closed.
 
 <p align="center">
   <img width="85%" src="./assets/demo.gif">
@@ -8,8 +8,7 @@ Summon is a MacOS status bar application that lets you configure custom hotkeys 
 
 ## Install
 
-Checkout the <a href="https://github.com/rohaldb/Summon/releases/latest">latest release tab</a> or <a href="https://github.com/rohaldb/Summon/releases/download/v1.0/Summon.dmg">download Summon</a>.
-
+Checkout the <a href="https://github.com/rohaldb/Summon/releases/latest">latest release tab</a> to download Summon.
 
 ## Usage
 
