@@ -8,7 +8,7 @@ Summon is a MacOS status bar application that lets you configure custom hotkeys 
 
 ## Install
 
-Checkout the <a href="https://github.com/rohaldb/Summon/releases/latest">latest release tab</a> or <a href="https://github.com/rohaldb/Summon/releases/download/v1.0/Summon.dmg">download Summon</a>.
+Checkout the <a href="https://github.com/rohaldb/Summon/releases/latest">latest release tab</a> to download Summon.
 
 
 ## Usage
