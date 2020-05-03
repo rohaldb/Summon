@@ -6,6 +6,11 @@ Summon is a MacOS status bar application that lets you configure custom hotkeys 
   <img width="85%" src="./assets/demo.gif">
 </p>
 
+## Install
+
+Checkout the <a href="https://github.com/rohaldb/Summon/releases/latest">latest release tab</a> or <a href="https://github.com/rohaldb/Summon/releases/download/v1.0/Summon.dmg">download Summon</a>.
+
+
 ## Usage
 
 Summon's preferences will open by default on launch. You can access them anytime through Summon's icon in the status bar.
