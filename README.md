@@ -20,7 +20,7 @@ To make a new binding, click on an application and enter a hotkey. You should en
 
 ## What is a hotkey
 
-A hotkey is a combination of one or more modifier modifiers with a single key. A key is any key on the standard apple keyboard that isn't one of the modifiers.
+A hotkey is a combination of one or more modifiers with a single key. A key is any key on the standard apple keyboard that isn't one of the modifiers.
 
 **Permitted modifiers**:
 
