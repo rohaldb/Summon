@@ -9,47 +9,46 @@ struct App {
 class ApplicationSearcher: NSObject {
 
     public func getAllApplications() -> [Application] {
-        let fileManager = FileManager()
-        let urls: [URL]
+
+        let localApplicationUrls = getApplicationUrlsAt(directory: .applicationDirectory, domain: .localDomainMask)
+        let systemApplicationsUrls = getApplicationUrlsAt(directory: .applicationDirectory, domain: .systemDomainMask)
+        let systemUtilitiesUrls = getApplicationUrlsAt(directory: .applicationDirectory, domain: .systemDomainMask, subpath: "/Utilities")
         
-        do {
-            //Get contents of /Applications
-            let applicationsFolderUrl = try FileManager.default.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
-            let applicationUrls = try fileManager.contentsOfDirectory(at: applicationsFolderUrl , includingPropertiesForKeys: [], options: [FileManager.DirectoryEnumerationOptions.skipsPackageDescendants, FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants])
-            
-            //Get contents of /Applications/Utilities
-            let systemApplicationsFolderUrl = try FileManager.default.url(for: .applicationDirectory, in: .systemDomainMask, appropriateFor: nil, create: false)
-            let utilitiesFolderUrl = NSURL.init(string: "\(systemApplicationsFolderUrl.path)/Utilities")! as URL
-            let utilitiesUrls = try fileManager.contentsOfDirectory(at: utilitiesFolderUrl, includingPropertiesForKeys: [], options: [FileManager.DirectoryEnumerationOptions.skipsPackageDescendants, FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants])
-            
-            urls = applicationUrls + utilitiesUrls
-        } catch {
-            urls = []
-        }
+        let allApplicationUrls = localApplicationUrls + systemApplicationsUrls + systemUtilitiesUrls
     
         var applications = [Application]()
         
-        for url in urls {
-            if shouldIncludeApplication(url: url) {
-                let name = url.deletingPathExtension().lastPathComponent
-                let icon = NSWorkspace.shared.icon(forFile: url.path)
-                applications.append(Application(name: name, url: url, icon: icon))
-            }
+        for url in allApplicationUrls {
+            do {
+                let resourceKeys : [URLResourceKey] = [.isExecutableKey, .isApplicationKey]
+                let resourceValues = try url.resourceValues(forKeys: Set(resourceKeys))
+                if resourceValues.isApplication! && resourceValues.isExecutable! {
+                    let name = url.deletingPathExtension().lastPathComponent
+                    let icon = NSWorkspace.shared.icon(forFile: url.path)
+                    applications.append(Application(name: name, url: url, icon: icon))
+                }
+            } catch {}
         }
         
         return applications
     }
     
-    private func shouldIncludeApplication(url: URL) -> Bool {
-        let isExecutable = FileManager.default.isExecutableFile(atPath: url.path)
-        let isApp = url.lastPathComponent.hasSuffix(".app")
-        if (isExecutable && isApp) {
-            return true
+    private func getApplicationUrlsAt(directory: FileManager.SearchPathDirectory, domain: FileManager.SearchPathDomainMask, subpath: String = "") -> [URL] {
+        let fileManager = FileManager()
+        
+        do {
+            let folderUrl = try FileManager.default.url(for: directory, in: domain, appropriateFor: nil, create: false)
+            let folderUrlWithSubpath = NSURL.init(string: folderUrl.path + subpath)! as URL
+            
+            let applicationUrls = try fileManager.contentsOfDirectory(at: folderUrlWithSubpath, includingPropertiesForKeys: [], options: [FileManager.DirectoryEnumerationOptions.skipsPackageDescendants, FileManager.DirectoryEnumerationOptions.skipsSubdirectoryDescendants])
+            
+            return applicationUrls
+        } catch {
+            return []
         }
-        return false
     }
-    
 }
+
 
 struct Application {
     var name: String
